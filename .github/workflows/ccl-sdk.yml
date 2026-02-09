@@ -1,0 +1,37 @@
+name: CCL SDK
+
+concurrency:
+  group: ccl-sdk
+  
+permissions:
+  contents: read
+  packages: read
+
+on: workflow_dispatch
+
+jobs:
+
+  build-android-sdk:
+    uses: ./.github/workflows/ccl-sdk-android.yml
+    secrets: inherit
+
+  build-in-docker:
+    needs: build-android-sdk
+    uses: ./.github/workflows/ccl-sdk-container.yml
+    permissions:
+      contents: read
+      packages: read
+    secrets: inherit
+    
+  #build-for-win:
+  #  needs: build-android-sdk
+  #  uses: ./.github/workflows/ccl-sdk-win.yml
+  #  permissions:
+  #    contents: read
+  #    packages: read
+  #  secrets: inherit
+    
+  #build-on-selfhosted:
+  #  needs: build-android-sdk
+  #  uses: ./.github/workflows/ccl-sdk-mac.yml
+  #  secrets: inherit

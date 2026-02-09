@@ -1,0 +1,17 @@
+#!/bin/sh
+
+echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">"
+echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
+echo "<head>"
+echo "<meta http-equiv=\"cache-control\" content=\"max-age=0\" />"
+echo "<meta http-equiv=\"cache-control\" content=\"no-cache\" />"
+echo "<meta http-equiv=\"expires\" content=\"0\" />"
+echo "<meta http-equiv=\"expires\" content=\"Tue, 01 Jan 1980 1:00:00 GMT\" />"
+echo "<meta http-equiv=\"pragma\" content=\"no-cache\" />"
+echo "</head>"
+echo "<body>"
+echo "    <p>$1</p>"
+echo "    <p><small>$(date '+%Y-%m-%d %H:%M')</small></p>"
+echo "    <p><small>$2</small></p>"
+echo "</body>"
+echo "</html>"

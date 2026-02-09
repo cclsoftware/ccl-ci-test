@@ -1,0 +1,13 @@
+--- a/ccl-targets.cmake	2026-01-07 14:45:45.501414700 +0100
++++ b/ccl-targets.cmake	2026-01-07 14:45:55.404512100 +0100
+@@ -50,6 +50,10 @@
+ get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
++if(NOT "${VENDOR_HOST_PLATFORM}" STREQUAL "win")
++  get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
++  get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
++endif()
+ if(_IMPORT_PREFIX STREQUAL "/")
+   set(_IMPORT_PREFIX "")
+ endif()

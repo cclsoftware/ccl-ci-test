@@ -1,0 +1,5 @@
+if(IOS)
+	set (CPACK_SYSTEM_NAME "iOS")
+else()
+	set (CPACK_SYSTEM_NAME "macOS")
+endif()

@@ -1,0 +1,17 @@
+name: CCL SDK for Android
+
+concurrency:
+  group: ccl-sdk-android
+  
+on: workflow_call
+  
+jobs:
+  build:
+    runs-on: [ubuntu-latest]
+    timeout-minutes: 90
+    steps:
+      - name: TODO
+        shell: bash
+        run: |
+          echo "TODO"
+          

@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# if BUILD_REVISION is undefined fall back to 0
+: "${BUILD_REVISION:=0}" 
+
+GIT_COMMIT=$(git rev-parse HEAD)
+
+: "${APPLE_API_KEY_FILENAME:?}"
+export APPLE_API_KEYPATH="$HOME/$APPLE_API_KEY_FILENAME"
+[[ -f "${APPLE_API_KEYPATH}" ]] ||
+{
+  echo "APPLE_API_KEYPATH does not exist: $APPLE_API_KEYPATH" >&2
+  exit 2
+}
+
+: "${APPLE_API_KEYID:?}"
+export APPLE_API_KEYID
+
+: "${APPLE_API_ISSUER:?}"
+export APPLE_API_ISSUER
+
+.github/ci/shared/prepare_workingcopy.sh
+
+# Python virtual environment
+source .venv/bin/activate
+
+# build macOS SDK
+pushd development/cmake
+cmake --preset mac -DBUILD_sdk=ON -DBUILD_ccldemo=ON -DBUILD_localizer=ON -DBUILD_skineditor=ON -DVENDOR_USE_PUBLISHER_CERTIFICATE=ON -DVENDOR_CACHE_DIRECTORY="$HOME/.cache"
+cmake --build build --config Debug -- -allowProvisioningUpdates -authenticationKeyPath "$APPLE_API_KEYPATH" -authenticationKeyID "$APPLE_API_KEYID"  -authenticationKeyIssuerID "$APPLE_API_ISSUER"
+cmake --build build --config Release -- -allowProvisioningUpdates -authenticationKeyPath "$APPLE_API_KEYPATH" -authenticationKeyID "$APPLE_API_KEYID"  -authenticationKeyIssuerID "$APPLE_API_ISSUER"
+popd
+
+# codesigning and notarization
+development/packaging/mac/build_sdk.sh 
+
+pushd development/cmake/build
+cpack -G TGZ -C "Debug;Release" --config SdkPackageConfig.cmake || true
+popd
+
+development/packaging/mac/build_applications.sh
+
+# build iOS SDK
+pushd development/cmake
+cmake --preset ios --fresh -DBUILD_sdk=ON -DBUILD_ccldemo=ON -DVENDOR_CACHE_DIRECTORY="$HOME/.cache"
+cmake --build build --config Debug -- -allowProvisioningUpdates -authenticationKeyPath "$APPLE_API_KEYPATH" -authenticationKeyID "$APPLE_API_KEYID"  -authenticationKeyIssuerID "$APPLE_API_ISSUER"
+cmake --build build --config Release -- -allowProvisioningUpdates -authenticationKeyPath "$APPLE_API_KEYPATH" -authenticationKeyID "$APPLE_API_KEYID"  -authenticationKeyIssuerID "$APPLE_API_ISSUER"
+pushd build
+cpack -G TGZ -C "Debug;Release" --config SdkPackageConfig.cmake || true
+popd
+popd
+
+development/packaging/ios/build_applications.sh
+
+# create archive packages
+mkdir -p build/deployment/mac ; build/shared/create_revision_html.sh ${BUILD_REVISION} `echo ${GIT_COMMIT} | head -c11` > build/deployment/mac/mac.build.html
+MACARCHIVE=(build/cmake/archive/*macOS.tar.gz)
+IOSARCHIVE=(build/cmake/archive/*iOS.tar.gz)
+tar -xzf "$MACARCHIVE"
+tar -xzf "$IOSARCHIVE"
+MACDIR=`echo $MACARCHIVE | sed 's/.*\/\([^\/]*\)\.tar\.gz/\1/'`
+IOSDIR=`echo $IOSARCHIVE | sed 's/.*\/\([^\/]*\)\.tar\.gz/\1/'`
+mv "$IOSDIR/lib/iOS" "$MACDIR/lib"
+mv "$IOSDIR/Frameworks/iOS" "$MACDIR/Frameworks"
+mv "$IOSDIR"/Frameworks/cmake/ccl/ios-* "$MACDIR/Frameworks/cmake/ccl/"
+
+rm -f "$MACDIR.tar.gz"
+tar -czf "$MACDIR.tar.gz" "$MACDIR"
+mv "$MACDIR.tar.gz" build/deployment/mac

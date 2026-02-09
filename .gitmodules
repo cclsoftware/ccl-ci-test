@@ -1,0 +1,5 @@
+[submodule "ccl-framework"]
+	path = framework
+	url = git@github.com:cclsoftware/ccl-framework
+        branch = main
+ 

@@ -1,0 +1,7 @@
+{
+	"version": 4,
+	"include":
+	[
+		"../../build/cmake/modules/shared/CMakePresets.json"
+	]
+}
