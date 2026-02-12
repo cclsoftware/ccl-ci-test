@@ -110,6 +110,7 @@ jobs:
       - name: Package
         shell: bash
         run: |
+          cd development/cmake/build/sdk    
           cpack -C 'Debug;Release' --config SdkPackageConfig.cmake ${CPACK_OPTIONS}
           
       - name: Sign Package
