@@ -15,8 +15,6 @@ export APPLE_API_KEYID
 : "${APPLE_API_ISSUER:?}"
 export APPLE_API_ISSUER
 
-.github/ci/shared/prepare_workingcopy.sh
-
 # Python virtual environment
 source .venv/bin/activate
 
