@@ -1,12 +1,21 @@
-name: CCL SDK on self-hosted Runner
+name: CCL SDK for Mac and iOS
 
-on: workflow_call
+on: workflow_dispatch
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
   build:
-    runs-on:
-      - self-hosted
-      - tartelet
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - host: macos-14
+            targetos: mac
+
+    runs-on:  ${{matrix.host}}
 
     steps:
       - name: Checkout
@@ -17,11 +26,20 @@ jobs:
 
       - name: Output status
         run: |
+          echo "Runner: $RUNNER_NAME"
+          echo "OS: $RUNNER_OS"
+          echo "Image: $ImageOS"
           echo "Hostname: $(hostname)"
           echo "User: $(whoami)"
-          echo "Runner OS: $RUNNER_OS"
           pwd
-          ls -lR .github
+
+      - name: Prepare environment
+        run: |
+          .github/ci/${{matrix.targetos}}/prepare_sdk_environment.sh
+
+      - name: Prepare workingcopy
+        run: |
+          .github/ci/shared/prepare_workingcopy.sh ${{github.run_number}}
 
       - name: Build
         env:

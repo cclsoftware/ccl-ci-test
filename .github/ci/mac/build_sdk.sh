@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# if BUILD_REVISION is undefined fall back to 0
-: "${BUILD_REVISION:=0}" 
-
-GIT_COMMIT=$(git rev-parse HEAD)
-
 : "${APPLE_API_KEY_FILENAME:?}"
 export APPLE_API_KEYPATH="$HOME/$APPLE_API_KEY_FILENAME"
 [[ -f "${APPLE_API_KEYPATH}" ]] ||
@@ -54,7 +49,7 @@ popd
 development/packaging/ios/build_applications.sh
 
 # create archive packages
-mkdir -p build/deployment/mac ; build/shared/create_revision_html.sh ${BUILD_REVISION} `echo ${GIT_COMMIT} | head -c11` > build/deployment/mac/mac.build.html
+mkdir -p build/deployment/mac
 MACARCHIVE=(build/cmake/archive/*macOS.tar.gz)
 IOSARCHIVE=(build/cmake/archive/*iOS.tar.gz)
 tar -xzf "$MACARCHIVE"
