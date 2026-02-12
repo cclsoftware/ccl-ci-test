@@ -40,7 +40,7 @@ jobs:
       - name: Initialize container
         shell: bash
         run: |
-          container_id=$(docker create --volume "${{github.workspace}}:F:" --workdir "F:\\" --entrypoint "tail" ghcr.io/cclsoftware/${{matrix.image}}) "-f" "/dev/null"
+          container_id=$(docker create --volume "${{github.workspace}}:F:" --workdir "F:\\" ghcr.io/cclsoftware/${{matrix.image}}) "tail" "-f" "/dev/null"
           echo "CONTAINER_ID=${container_id}" >> "$GITHUB_ENV"
           echo "DOCKERCMD=docker exec ${container_id}" >> "$GITHUB_ENV"
           docker start "${container_id}"
