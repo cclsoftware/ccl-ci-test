@@ -55,6 +55,10 @@ jobs:
           key: cclcache-${{ matrix.targetos }}-${{ github.ref_name }}
 
       - name: Prepare environment
+        env:
+          SIGNING_TEAMID_MAC: ${{ vars.SIGNING_TEAMID_MAC }}
+          SIGNING_TEAMID_IOS: ${{ vars.SIGNING_TEAMID_IOS }}
+          SIGNING_CERTIFICATE_MAC: ${{ vars.SIGNING_CERTIFICATE_MAC }}
         run: |
           .github/ci/${{matrix.targetos}}/prepare_sdk_environment.sh
 
@@ -75,9 +79,6 @@ jobs:
           APPLE_API_KEY_FILENAME: ${{ vars.APPLE_API_KEY_FILENAME }}
           APPLE_API_KEYID: ${{ vars.APPLE_API_KEYID }}
           APPLE_API_ISSUER: ${{ vars.APPLE_API_ISSUER }}
-          SIGNING_TEAMID_MAC: ${{ vars.SIGNING_TEAMID_MAC }}
-          SIGNING_TEAMID_IOS: ${{ vars.SIGNING_TEAMID_IOS }}
-          SIGNING_CERTIFICATE_MAC: ${{ vars.SIGNING_CERTIFICATE_MAC }}
         run: |
           .github/ci/mac/setup_keychain.sh
           .github/ci/mac/configure_system.sh
