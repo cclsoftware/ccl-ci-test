@@ -22,7 +22,7 @@ source .venv/bin/activate
 
 # build macOS SDK
 pushd development/cmake
-cmake --preset mac -DBUILD_sdk=ON -DBUILD_ccldemo=ON -DBUILD_localizer=ON -DBUILD_skineditor=ON -DVENDOR_USE_PUBLISHER_CERTIFICATE=ON -DVENDOR_CACHE_DIRECTORY="$HOME/.cache"
+cmake --preset mac -DBUILD_sdk=ON -DVENDOR_USE_PUBLISHER_CERTIFICATE=ON -DVENDOR_CACHE_DIRECTORY="$HOME/.cache"
 cmake --build build --config Debug -- -allowProvisioningUpdates -authenticationKeyPath "$APPLE_API_KEYPATH" -authenticationKeyID "$APPLE_API_KEYID"  -authenticationKeyIssuerID "$APPLE_API_ISSUER"
 cmake --build build --config Release -- -allowProvisioningUpdates -authenticationKeyPath "$APPLE_API_KEYPATH" -authenticationKeyID "$APPLE_API_KEYID"  -authenticationKeyIssuerID "$APPLE_API_ISSUER"
 popd
@@ -34,11 +34,11 @@ pushd development/cmake/build
 cpack -G TGZ -C "Debug;Release" --config SdkPackageConfig.cmake || true
 popd
 
-development/packaging/mac/build_applications.sh
+# development/packaging/mac/build_applications.sh
 
 # build iOS SDK
 pushd development/cmake
-cmake --preset ios --fresh -DBUILD_sdk=ON -DBUILD_ccldemo=ON -DVENDOR_CACHE_DIRECTORY="$HOME/.cache"
+cmake --preset ios --fresh -DBUILD_sdk=ON -DVENDOR_CACHE_DIRECTORY="$HOME/.cache"
 cmake --build build --config Debug -- -allowProvisioningUpdates -authenticationKeyPath "$APPLE_API_KEYPATH" -authenticationKeyID "$APPLE_API_KEYID"  -authenticationKeyIssuerID "$APPLE_API_ISSUER"
 cmake --build build --config Release -- -allowProvisioningUpdates -authenticationKeyPath "$APPLE_API_KEYPATH" -authenticationKeyID "$APPLE_API_KEYID"  -authenticationKeyIssuerID "$APPLE_API_ISSUER"
 pushd build
@@ -46,7 +46,7 @@ cpack -G TGZ -C "Debug;Release" --config SdkPackageConfig.cmake || true
 popd
 popd
 
-development/packaging/ios/build_applications.sh
+# development/packaging/ios/build_applications.sh
 
 # create archive packages
 mkdir -p build/deployment/mac

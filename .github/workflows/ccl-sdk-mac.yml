@@ -32,6 +32,18 @@ jobs:
           echo "User: $(whoami)"
           pwd
 
+      - name: Fix macOS SDK
+        run: |
+          cd framework
+          git apply ../patches/macos-sdk.patch
+
+      - name: Setup CCL cache
+        id: cache-ccl
+        uses: actions/cache@v5
+        with:
+          path: .cache/ccl
+          key: cclcache-${{ matrix.targetos }}-${{ github.ref_name }}
+
       - name: Prepare environment
         run: |
           .github/ci/${{matrix.targetos}}/prepare_sdk_environment.sh
