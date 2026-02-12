@@ -35,83 +35,62 @@ jobs:
       - name: Pull container
         shell: bash
         run: |
-          docker pull ghcr.io/cclsoftware/ccl-win-sdk:latest
+          docker pull ghcr.io/cclsoftware/${{matrix.image}}
           
-      - name: Test container
+      - name: Initialize container
         shell: bash
         run: |
-          docker run -i --rm \
-            ghcr.io/cclsoftware/ccl-win-sdk:latest \
-            cmd /c ver
+          container_id=$(docker create --volume "${{github.workspace}}:F:" --workdir "F:" ghcr.io/cclsoftware/${{matrix.image}})
+          echo "CONTAINER_ID=${container_id}" >> "$GITHUB_ENV"
+          echo "DOCKERCMD=docker exec ${container_id}" >> "$GITHUB_ENV"
+          docker start "${container_id}"
           
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
     
-      - name: Setup ccache
-        if: matrix.targetos != 'win'
-        uses: hendrikmuhs/ccache-action@v1.2
-          
       - name: Prepare environment
         shell: bash
         run: |
-          .github/ci/${{matrix.targetos}}/prepare_sdk_environment.sh
+          ${DOCKERCMD} .github/ci/${{matrix.targetos}}/prepare_sdk_environment.sh
           
       - name: Prepare workingcopy
         shell: bash
         run: |
-          .github/ci/shared/prepare_workingcopy.sh ${{github.run_number}}
+          ${DOCKERCMD} .github/ci/shared/prepare_workingcopy.sh ${{github.run_number}}
       
-      - name: Build CCL tools
-        if: ${{ matrix.targetos == 'linux' }}
-        shell: bash
-        run: |
-          cd development/cmake
-          cmake -B build/tools --fresh --preset linux-release -DBUILD_tools=ON ${CMAKE_BUILD_OPTIONS} \
-            -DVENDOR_BUILDOUTPUT_DIRECTORY=${GITHUB_WORKSPACE}/framework/tools/bin/linux/ccl/x86_64
-          cd build/tools
-          cmake --build . --target cclpackage
-          cmake --build . --target crypt
-                    
       - name: Configure CMake
         shell: bash
         #env:
         #  ccl_SIGNING_AZURE_SECRET: ${{ secrets.SIGNING_AZURE_SECRET }}
         run: |
-          cd development/cmake
-          cmake -B build/sdk --fresh --preset ${CMAKE_PRESET} -DBUILD_sdk=ON ${CMAKE_BUILD_OPTIONS}
+          ${DOCKERCMD} bash -c 'cd development/cmake && cmake -B build/sdk --fresh --preset ${CMAKE_PRESET} -DBUILD_sdk=ON ${CMAKE_BUILD_OPTIONS}'
           
       - name: Build
         shell: bash
         run: |
-          cd development/cmake/build/sdk          
-          cmake --build . --config Debug
-          cmake --build . --config Release
+          ${DOCKERCMD} bash -c 'cd development/cmake/build/sdk && cmake --build . --config Debug && cmake --build . --config Release'
          
       - name: Sign Binaries
-        if: matrix.signbinaries
         shell: bash
         run: |
-          cd development/cmake/build/sdk          
-          cmake --build . --config Debug --target sign_ccl_binaries
-          cmake --build . --config Release --target sign_ccl_binaries
+          ${DOCKERCMD} bash -c 'cd development/cmake/build/sdk && cmake --build . --config Debug --target sign_ccl_binaries && cmake --build . --config Release --target sign_ccl_binaries'
           
       - name: Package
         shell: bash
         run: |
-          cpack -C 'Debug;Release' --config SdkPackageConfig.cmake ${CPACK_OPTIONS}
+          ${DOCKERCMD} bash -c 'cpack -C "Debug;Release" --config SdkPackageConfig.cmake ${CPACK_OPTIONS}'
           
       - name: Sign Package
         if: matrix.signbinaries
         shell: bash
         run: |
-          cd development/cmake/build/sdk          
-          cmake --build . --config Release --target signed_sdkpackage
+          ${DOCKERCMD} bash -c 'cd development/cmake/build/sdk && cmake --build . --config Release --target signed_sdkpackage'
           
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ccl-sdk
+          name: ccl-sdk-${{matrix.targetos}}
           path: |
             build/cmake/archive/*.*
