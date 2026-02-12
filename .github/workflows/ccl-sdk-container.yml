@@ -61,6 +61,13 @@ jobs:
         run: |
           .github/ci/shared/prepare_workingcopy.sh ${{github.run_number}}
       
+      - name: Fix Linux Arm64 build
+        if: ${{ matrix.targetos == 'linux' }}
+        shell: bash
+        run: |
+          cd framework
+          git apply ../patches/linux-vulkan.patch
+        
       - name: Build CCL tools
         if: ${{ matrix.targetos == 'linux' }}
         shell: bash
