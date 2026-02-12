@@ -12,7 +12,7 @@ npm install typedoc@0.23.28 --global
 brew install doxygen
 
 # configure Xcode version
-xcodes select 16.0
+xcodes select 16.1
 
 # output system info 
 echo "=== System ==="
