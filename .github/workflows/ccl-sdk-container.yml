@@ -123,6 +123,6 @@ jobs:
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ccl-sdk
+          name: ccl-sdk-${{matrix.targetos}}
           path: |
             build/cmake/archive/*.*
