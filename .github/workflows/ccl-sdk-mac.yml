@@ -1,10 +1,20 @@
 name: CCL SDK for Mac and iOS
 
-on: workflow_dispatch
-
 defaults:
   run:
     shell: bash
+
+on:
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: "Runner backend"
+        required: true
+        default: "github"
+        type: choice
+        options:
+          - github
+          - selfhosted
 
 jobs:
   build:
@@ -15,7 +25,7 @@ jobs:
           - host: macos-14
             targetos: mac
 
-    runs-on:  ${{matrix.host}}
+    runs-on:  ${{ inputs.runner == 'selfhosted' && fromJSON('["self-hosted","tartelet"]') || matrix.host }}
 
     steps:
       - name: Checkout
