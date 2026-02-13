@@ -15,7 +15,7 @@ jobs:
           - host: macos-14
             targetos: mac
 
-    runs-on: matrix.host
+    runs-on: ${{matrix.host}}
 
     steps:
       - name: Checkout
