@@ -4,17 +4,7 @@ defaults:
   run:
     shell: bash
 
-on:
-  workflow_dispatch:
-    inputs:
-      runner:
-        description: "Runner backend"
-        required: true
-        default: "github"
-        type: choice
-        options:
-          - github
-          - selfhosted
+on: workflow_call
 
 jobs:
   build:
@@ -25,7 +15,7 @@ jobs:
           - host: macos-14
             targetos: mac
 
-    runs-on:  ${{ inputs.runner == 'selfhosted' && fromJSON('["self-hosted","tartelet"]') || matrix.host }}
+    runs-on: matrix.host
 
     steps:
       - name: Checkout
@@ -83,3 +73,10 @@ jobs:
           .github/ci/mac/setup_keychain.sh
           .github/ci/mac/configure_system.sh
           .github/ci/mac/build_sdk.sh
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ccl-sdk-${{matrix.targetos}}
+          path: |
+            build/deployment/mac/*.*

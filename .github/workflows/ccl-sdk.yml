@@ -31,7 +31,7 @@ jobs:
   #    packages: read
   #  secrets: inherit
     
-  #build-on-selfhosted:
-  #  needs: build-android-sdk
-  #  uses: ./.github/workflows/ccl-sdk-mac.yml
-  #  secrets: inherit
+  build-macos-sdk:
+    needs: build-android-sdk
+    uses: ./.github/workflows/ccl-sdk-mac.yml
+    secrets: inherit
