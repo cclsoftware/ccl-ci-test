@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - host: macos-14
+          - host: macos-15
             targetos: mac
 
     runs-on: ${{matrix.host}}
@@ -32,10 +32,10 @@ jobs:
           echo "User: $(whoami)"
           pwd
 
-      - name: Fix macOS SDK
-        run: |
-          cd framework
-          git apply ../patches/macos-sdk.patch
+      # - name: Fix macOS SDK
+      #   run: |
+      #     cd framework
+      #     git apply ../patches/macos-sdk.patch
 
       - name: Setup CCL cache
         id: cache-ccl
