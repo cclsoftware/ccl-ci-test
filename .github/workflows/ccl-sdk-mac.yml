@@ -1,4 +1,4 @@
-name: CCL SDK for Mac and iOS
+name: CCL SDK for Mac
 
 defaults:
   run:
@@ -31,11 +31,6 @@ jobs:
           echo "Hostname: $(hostname)"
           echo "User: $(whoami)"
           pwd
-
-      # - name: Fix macOS SDK
-      #   run: |
-      #     cd framework
-      #     git apply ../patches/macos-sdk.patch
 
       - name: Setup CCL cache
         id: cache-ccl
