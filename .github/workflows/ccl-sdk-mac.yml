@@ -39,6 +39,9 @@ jobs:
           path: .cache/ccl
           key: cclcache-${{ matrix.targetos }}-${{ github.ref_name }}
 
+      - name: Log pre-run CCL cache
+        run: ls -lR .cache
+
       - name: Prepare environment
         env:
           SIGNING_TEAMID_MAC: ${{ vars.SIGNING_TEAMID_MAC }}
@@ -68,6 +71,9 @@ jobs:
           .github/ci/mac/setup_keychain.sh
           .github/ci/mac/configure_system.sh
           .github/ci/mac/build_sdk.sh
+
+      - name: Log post-run CCL cache
+        run: ls -lR .cache
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
