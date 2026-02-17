@@ -33,7 +33,7 @@ jobs:
     secrets: inherit
 
   build-in-docker:
-    if: ${{ inputs.buildLinux == 'true' }}
+    if: ${{ inputs.buildLinux }}
     needs: build-android-sdk
     uses: ./.github/workflows/ccl-sdk-container.yml
     permissions:
@@ -42,7 +42,7 @@ jobs:
     secrets: inherit
     
   build-for-win:
-    if: ${{ inputs.buildWin == 'true' }}
+    if: ${{ inputs.buildWin }}
     needs: build-android-sdk
     uses: ./.github/workflows/ccl-sdk-win.yml
     permissions:
@@ -51,7 +51,7 @@ jobs:
     secrets: inherit
     
   build-macos-sdk:
-    if: ${{ inputs.buildMac == 'true' }}
+    if: ${{ inputs.buildMac }}
     needs: build-android-sdk
     uses: ./.github/workflows/ccl-sdk-mac.yml
     secrets: inherit
