@@ -12,14 +12,17 @@ on:
     inputs:
       buildWin:
         description: 'Build Windows SDK'
+        type: boolean
         required: true
         default: true
       buildMac:
         description: 'Build Mac SDK'
+        type: boolean
         required: true
         default: true
       buildLinux:
         description: 'Build Linux SDK'
+        type: boolean
         required: true
         default: true
 
@@ -30,7 +33,7 @@ jobs:
     secrets: inherit
 
   build-in-docker:
-    if: ${{ inputs.buildLinux }}
+    if: ${{ inputs.buildLinux == 'true' }}
     needs: build-android-sdk
     uses: ./.github/workflows/ccl-sdk-container.yml
     permissions:
@@ -39,7 +42,7 @@ jobs:
     secrets: inherit
     
   build-for-win:
-    if: ${{ inputs.buildWin }}
+    if: ${{ inputs.buildWin == 'true' }}
     needs: build-android-sdk
     uses: ./.github/workflows/ccl-sdk-win.yml
     permissions:
@@ -48,7 +51,7 @@ jobs:
     secrets: inherit
     
   build-macos-sdk:
-    if: ${{ inputs.buildMac }}
+    if: ${{ inputs.buildMac == 'true' }}
     needs: build-android-sdk
     uses: ./.github/workflows/ccl-sdk-mac.yml
     secrets: inherit
