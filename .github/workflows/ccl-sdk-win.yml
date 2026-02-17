@@ -40,12 +40,8 @@ jobs:
       - name: Initialize container
         shell: bash
         run: |
-          container_id=$(docker create --volume "${{github.workspace}}:F:" --workdir "F:\\" --entrypoint "bash" ghcr.io/cclsoftware/${{matrix.image}} "tail" "-f" "/dev/null")
-          echo "CONTAINER_ID=${container_id}" >> "$GITHUB_ENV"
-          echo "DOCKERCMD=docker exec ${container_id}" >> "$GITHUB_ENV"
-          docker start --detach "${container_id}"
-          docker ps --all --filter id=${container_id} --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
-          docker inspect --format "{{range .Config.Env}}{{println .}}{{end}}" ${container_id}
+          echo "DOCKERCMD=docker run --volume '"${{github.workspace}}:F:"' --workdir '"F:\\"' ghcr.io/cclsoftware/${{matrix.image}} bash -c" >> "$GITHUB_ENV"
+          ${DOCKERCMD} ls
           
       - name: Checkout
         uses: actions/checkout@v4
