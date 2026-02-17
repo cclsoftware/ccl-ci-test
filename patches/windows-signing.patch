@@ -1,5 +1,5 @@
 diff --git a/core/cmake/coremacros.win.cmake b/core/cmake/coremacros.win.cmake
-index 7552575fac..54b75cc2dc 100644
+index b350d58..1310c8f 100644
 --- a/core/cmake/coremacros.win.cmake
 +++ b/core/cmake/coremacros.win.cmake
 @@ -320,7 +320,7 @@ macro (ccl_configure_project_vendor vendor)
@@ -11,3 +11,23 @@ index 7552575fac..54b75cc2dc 100644
  		cmake_path (NATIVE_PATH sign_script NORMALIZE sign_script_native)
  		find_file (sign_extensions_script NAMES "sign_extensions.bat" PATHS "${REPOSITORY_ROOT}/build/win")
  		cmake_path (NATIVE_PATH sign_extensions_script NORMALIZE sign_extensions_script_native)
+@@ -350,15 +350,15 @@ macro (ccl_configure_project_vendor vendor)
+ 			
+ 		else ()
+ 		
+-			find_file (sign_file_script REQUIRED NAMES "sign_file.bat" PATHS "${REPOSITORY_ROOT}/build/win")
++			find_file (sign_file_script REQUIRED NAMES "sign_file.bat" PATHS "${REPOSITORY_ROOT}/build/win" "${CCL_REPOSITORY_ROOT}/build/win")
+ 			cmake_path (NATIVE_PATH sign_file_script NORMALIZE sign_file_script_native)	
+ 			
+ 			add_custom_command (OUTPUT ${sign_target_name}_run_always
+ 				COMMENT "Signing binaries"
+ 				COMMAND "${CMD}" /c "${${vendor}_SIGNING_PRE_COMMAND}"
+-				COMMAND "${CMD}" /c "${sign_script_native}" ${sign_args} "${artifacts_directory}/*.exe"
+-				COMMAND "${CMD}" /c "${sign_script_native}" ${sign_args} "${artifacts_directory}/*.dll"
+-				COMMAND "${CMD}" /c "${sign_script_native}" ${sign_args} "${artifacts_directory}/Plugins/*.dll"
++				COMMAND "${CMD}" /c "${sign_file_script_native}" ${sign_args} "${artifacts_directory}/*.exe"
++				COMMAND "${CMD}" /c "${sign_file_script_native}" ${sign_args} "${artifacts_directory}/*.dll"
++				COMMAND "${CMD}" /c "${sign_file_script_native}" ${sign_args} "${artifacts_directory}/Plugins/*.dll"
+ 				COMMAND "${CMD}" /c "${${vendor}_SIGNING_POST_COMMAND}"
+ 				VERBATIM
+ 			)
