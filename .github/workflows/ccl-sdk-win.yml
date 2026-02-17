@@ -40,8 +40,8 @@ jobs:
       - name: Initialize container
         shell: bash
         run: |
-          echo "DOCKERCMD=docker run --volume '"${{github.workspace}}:F:"' --workdir '"F:\\"' ghcr.io/cclsoftware/${{matrix.image}} bash -c" >> "$GITHUB_ENV"
-          ${DOCKERCMD} ls
+          #echo "DOCKERCMD=docker run --volume '"${{github.workspace}}:F:"' --workdir '"F:\\"' ghcr.io/cclsoftware/${{matrix.image}} bash -c" >> "$GITHUB_ENV"
+          docker run --volume "${{github.workspace}}:F:" --workdir "F:\\" ghcr.io/cclsoftware/${{matrix.image}} bash -c ls
           
       - name: Checkout
         uses: actions/checkout@v4
