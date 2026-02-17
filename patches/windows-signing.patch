@@ -1,0 +1,13 @@
+diff --git a/core/cmake/coremacros.win.cmake b/core/cmake/coremacros.win.cmake
+index 7552575fac..54b75cc2dc 100644
+--- a/core/cmake/coremacros.win.cmake
++++ b/core/cmake/coremacros.win.cmake
+@@ -320,7 +320,7 @@ macro (ccl_configure_project_vendor vendor)
+ 		ccl_get_sign_args (sign_args "${vendor}")
+ 		
+ 		find_program (CMD REQUIRED NAMES cmd)
+-		find_file (sign_script REQUIRED NAMES "sign_binaries.bat" PATHS "${REPOSITORY_ROOT}/build/win" "${CCL_REPOSITORY_ROOT}/build/win")
++		find_file (sign_script NAMES "sign_binaries.bat" PATHS "${REPOSITORY_ROOT}/build/win" "${CCL_REPOSITORY_ROOT}/build/win")
+ 		cmake_path (NATIVE_PATH sign_script NORMALIZE sign_script_native)
+ 		find_file (sign_extensions_script NAMES "sign_extensions.bat" PATHS "${REPOSITORY_ROOT}/build/win")
+ 		cmake_path (NATIVE_PATH sign_extensions_script NORMALIZE sign_extensions_script_native)

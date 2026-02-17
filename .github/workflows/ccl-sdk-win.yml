@@ -49,6 +49,12 @@ jobs:
           path: .cache/ccl
           key: cclcache-${{ matrix.targetos }}-${{ github.ref_name }}
           
+      - name: Fix signing
+        shell: bash
+        run: |
+          cd framework
+          git apply ../patches/windows-signing.patch
+        
       - name: Build in container
         shell: bash
         run: |
