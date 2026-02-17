@@ -24,18 +24,6 @@ jobs:
       
     steps:
     
-      - name: Log into registry
-        uses: docker/login-action@v3.1.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Pull container
-        shell: bash
-        run: |
-          docker pull ghcr.io/cclsoftware/${{matrix.image}}
-          
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -59,7 +47,19 @@ jobs:
         run: |
           cd framework
           git apply ../patches/windows-signing.patch
-        
+    
+      - name: Log into registry
+        uses: docker/login-action@v3.1.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Pull container
+        shell: bash
+        run: |
+          docker pull ghcr.io/cclsoftware/${{matrix.image}}
+              
       - name: Build in container
         shell: bash
         run: |
