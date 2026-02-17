@@ -15,7 +15,6 @@ jobs:
           - host: windows-2025
             image: ccl-win-sdk:latest
             targetos: win
-            signbinaries: true
             
     runs-on: ${{matrix.host}}
     
