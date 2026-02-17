@@ -44,8 +44,6 @@ jobs:
 
       - name: Prepare environment
         env:
-          SIGNING_TEAMID_MAC: ${{ vars.SIGNING_TEAMID_MAC }}
-          SIGNING_TEAMID_IOS: ${{ vars.SIGNING_TEAMID_IOS }}
           SIGNING_CERTIFICATE_MAC: ${{ vars.SIGNING_CERTIFICATE_MAC }}
         run: |
           .github/ci/${{matrix.targetos}}/prepare_sdk_environment.sh
