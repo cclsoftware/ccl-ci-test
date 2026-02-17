@@ -52,27 +52,9 @@ jobs:
       - name: Build in container
         shell: bash
         run: |
-          #echo "DOCKERCMD=docker run --volume '"${{github.workspace}}:F:"' --workdir '"F:\\"' ghcr.io/cclsoftware/${{matrix.image}} bash -c" >> "$GITHUB_ENV"
-          docker run --volume "${{github.workspace}}:F:" --workdir "F:\\" ghcr.io/cclsoftware/${{matrix.image}} bash -c \
-            echo "-- Prepare Build Environment" \
-            && .github/ci/${{matrix.targetos}}/prepare_sdk_environment.sh \
-            && .github/ci/shared/prepare_workingcopy.sh ${{github.run_number}} \
-            \
-            && echo "-- Configure CMake Project" \
-            && cd development/cmake \
-            && cmake -B build/sdk --fresh --preset ${CMAKE_PRESET} -DBUILD_sdk=ON -DVENDOR_CACHE_DIRECTORY=/f/.cache/ccl ${CMAKE_BUILD_OPTIONS} \
-            \
-            && echo "-- Build Debug and Release" \
-            && cd build/sdk && cmake --build . --config Debug && cmake --build . --config Release \
-            \
-            && echo "-- Sign Binaries" \
-            && cmake --build . --config Debug --target sign_ccl_binaries && cmake --build . --config Release --target sign_ccl_binaries \
-            \
-            && echo "-- Build Installer" \
-            && cpack -C "Debug;Release" --config SdkPackageConfig.cmake ${CPACK_OPTIONS} \
-            \
-            && echo "-- Sign Installer" \
-            && cmake --build . --config Release --target signed_sdkpackage 
+          docker run --volume "${{github.workspace}}:F:" --workdir "F:\\" ghcr.io/cclsoftware/${{matrix.image}} bash \
+            ./.github/ci/win/build_sdk.sh ${{github.run_number}}
+            
           
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
