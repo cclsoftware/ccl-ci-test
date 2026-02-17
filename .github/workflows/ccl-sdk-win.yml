@@ -53,8 +53,7 @@ jobs:
         shell: bash
         run: |
           docker run --volume "${{github.workspace}}:F:" --workdir "F:\\" ghcr.io/cclsoftware/${{matrix.image}} bash \
-            ./.github/ci/win/build_sdk.sh ${{github.run_number}}
-            
+            ./.github/ci/win/build_sdk.sh ${{github.run_number}}    
           
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
