@@ -48,6 +48,12 @@ jobs:
           path: .cache/ccl
           key: cclcache-${{ matrix.targetos }}-${{ github.ref_name }}
           
+      - name: Prepare signing
+        shell: bash
+        run: |
+          ./.github/ci/win/prepare_signing.patch
+          cat build/signing/ccl/signing.cmake
+        
       - name: Fix signing
         shell: bash
         run: |
