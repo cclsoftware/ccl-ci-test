@@ -54,7 +54,7 @@ jobs:
         run: |
           #echo "DOCKERCMD=docker run --volume '"${{github.workspace}}:F:"' --workdir '"F:\\"' ghcr.io/cclsoftware/${{matrix.image}} bash -c" >> "$GITHUB_ENV"
           docker run --volume "${{github.workspace}}:F:" --workdir "F:\\" ghcr.io/cclsoftware/${{matrix.image}} bash -c \
-            && echo "-- Prepare Build Environment"
+            echo "-- Prepare Build Environment" \
             && .github/ci/${{matrix.targetos}}/prepare_sdk_environment.sh \
             && .github/ci/shared/prepare_workingcopy.sh ${{github.run_number}} \
             \
