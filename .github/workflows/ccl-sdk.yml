@@ -23,13 +23,13 @@ jobs:
       packages: read
     secrets: inherit
     
-  #build-for-win:
-  #  needs: build-android-sdk
-  #  uses: ./.github/workflows/ccl-sdk-win.yml
-  #  permissions:
-  #    contents: read
-  #    packages: read
-  #  secrets: inherit
+  build-for-win:
+    needs: build-android-sdk
+    uses: ./.github/workflows/ccl-sdk-win.yml
+    permissions:
+      contents: read
+      packages: read
+    secrets: inherit
     
   build-macos-sdk:
     needs: build-android-sdk
