@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 buildnumber=$1
 
@@ -7,8 +8,8 @@ cidir="${scriptdir}/.."
 
 echo "-- Prepare Build Environment"
 
-${scriptdir}/prepare_sdk_environment.sh
-${cidir}/shared/prepare_workingcopy.sh ${buildnumber}
+source ${scriptdir}/prepare_sdk_environment.sh
+source ${cidir}/shared/prepare_workingcopy.sh ${buildnumber}
             
 echo "-- Configure CMake Project"
 
