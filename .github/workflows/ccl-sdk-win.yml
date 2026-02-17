@@ -51,7 +51,7 @@ jobs:
       - name: Prepare signing
         shell: bash
         run: |
-          ./.github/ci/win/prepare_signing.patch
+          ./.github/ci/win/prepare_signing.sh
           cat build/signing/ccl/signing.cmake
         
       - name: Fix signing
