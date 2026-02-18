@@ -31,16 +31,20 @@ jobs:
   
       - name: Prepare build environment
         uses: ./.github/ci/win/prepare-build-environment
-        secrets: inherit
         with:
           image: ${{ matrix.image }}
           targetos: ${{ matrix.targetos }}
     
       - name: Build CCL Tools in container
         uses: ./.github/ci/win/build-cmake-target
-        secrets: inherit
         with:
           image: ${{ matrix.image }}
+          signkeyvault: ${{ secrets.SIGNING_AZURE_KEYVAULT_WIN }}
+          signclientid: ${{ secrets.SIGNING_AZURE_CLIENTID_WIN }}
+          signtenantid: ${{ secrets.SIGNING_AZURE_TENANTID_WIN }}
+          signcert: ${{ secrets.SIGNING_CERTIFICATE_WIN }}
+          signserver: ${{ vars.SIGNING_TIMESTAMP_SERVER_WIN }}
+          signsecret: ${{ secrets.SIGNING_AZURE_SECRET_WIN }}
           dockerargs: |
             -e BUILD_REVISION="${{ github.run_number }}" \
             -e BUILD_DIR="build/tools" \
@@ -49,9 +53,14 @@ jobs:
        
       - name: Build CCL Public Tools in container
         uses: ./.github/ci/win/build-cmake-target
-        secrets: inherit
         with:
           image: ${{ matrix.image }}
+          signkeyvault: ${{ secrets.SIGNING_AZURE_KEYVAULT_WIN }}
+          signclientid: ${{ secrets.SIGNING_AZURE_CLIENTID_WIN }}
+          signtenantid: ${{ secrets.SIGNING_AZURE_TENANTID_WIN }}
+          signcert: ${{ secrets.SIGNING_CERTIFICATE_WIN }}
+          signserver: ${{ vars.SIGNING_TIMESTAMP_SERVER_WIN }}
+          signsecret: ${{ secrets.SIGNING_AZURE_SECRET_WIN }}
           dockerargs: |
             -e BUILD_REVISION="${{ github.run_number }}" \
             -e BUILD_DIR="build/publictools" \
@@ -60,9 +69,14 @@ jobs:
             
       - name: Build Core Tools in container
         uses: ./.github/ci/win/build-cmake-target
-        secrets: inherit
         with:
           image: ${{ matrix.image }}
+          signkeyvault: ${{ secrets.SIGNING_AZURE_KEYVAULT_WIN }}
+          signclientid: ${{ secrets.SIGNING_AZURE_CLIENTID_WIN }}
+          signtenantid: ${{ secrets.SIGNING_AZURE_TENANTID_WIN }}
+          signcert: ${{ secrets.SIGNING_CERTIFICATE_WIN }}
+          signserver: ${{ vars.SIGNING_TIMESTAMP_SERVER_WIN }}
+          signsecret: ${{ secrets.SIGNING_AZURE_SECRET_WIN }}
           dockerargs: |
             -e BUILD_REVISION="${{ github.run_number }}" \
             -e BUILD_DIR="build/coretools" \

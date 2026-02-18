@@ -9,6 +9,30 @@ inputs:
     description: 'Additional Docker Arguments'
     required: false
     default: ''
+  signkeyvault:
+    description: 'Signing Key Vault'
+    required: true
+    default: ''
+  signclientid:
+    description: 'Signing Key Vault'
+    required: true
+    default: ''
+  signtenantid:
+    description: 'Signing Key Vault'
+    required: true
+    default: ''
+  signcert:
+    description: 'Signing Key Vault'
+    required: true
+    default: ''
+  signserver:
+    description: 'Signing Key Vault'
+    required: true
+    default: ''  
+  signsecret:
+    description: 'Signing Key Vault'
+    required: true
+    default: ''
   
 runs:
   using: "composite"
@@ -20,12 +44,12 @@ runs:
         docker run \
           --volume "${{ github.workspace }}:F:" \
           --workdir "F:\\" \
-          -e ccl_SIGNING_AZURE_KEYVAULT_WIN="${{ secrets.SIGNING_AZURE_KEYVAULT_WIN }}" \
-          -e ccl_SIGNING_AZURE_CLIENTID_WIN="${{ secrets.SIGNING_AZURE_CLIENTID_WIN }}" \
-          -e ccl_SIGNING_AZURE_TENANTID_WIN="${{ secrets.SIGNING_AZURE_TENANTID_WIN }}" \
-          -e ccl_SIGNING_CERTIFICATE_WIN="${{ secrets.SIGNING_CERTIFICATE_WIN }}" \
-          -e ccl_SIGNING_TIMESTAMP_SERVER_WIN="${{ vars.SIGNING_TIMESTAMP_SERVER_WIN }}" \
-          -e ccl_SIGNING_AZURE_SECRET="${{ secrets.SIGNING_AZURE_SECRET_WIN }}" \
+          -e ccl_SIGNING_AZURE_KEYVAULT_WIN="${{ inputs.signkeyvault }}" \
+          -e ccl_SIGNING_AZURE_CLIENTID_WIN="${{ inputs.signclientid }}" \
+          -e ccl_SIGNING_AZURE_TENANTID_WIN="${{ inputs.signtenantid }}" \
+          -e ccl_SIGNING_CERTIFICATE_WIN="${{ inputs.signcert }}" \
+          -e ccl_SIGNING_TIMESTAMP_SERVER_WIN="${{ inputs.signserver }}" \
+          -e ccl_SIGNING_AZURE_SECRET="${{ inputs.signsecret }}" \
           ${{ inputs.dockerargs }} \
           ghcr.io/cclsoftware/${{ inputs.image }} \
           bash ./.github/ci/win/build_cmake_target.sh
