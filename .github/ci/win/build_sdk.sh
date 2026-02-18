@@ -1,28 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-buildnumber=$1
-
 scriptdir=$(dirname "$0")
 cidir="${scriptdir}/.."
 
-echo "-- Prepare Build Environment"
+export BUILD_DIR=build/sdk
+export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS} -DBUILD_sdk=ON"
+           
+source ${scriptdir}/build_cmake_target.sh
 
-source ${scriptdir}/prepare_sdk_environment.sh
-source ${cidir}/shared/prepare_workingcopy.sh ${buildnumber}
-            
-echo "-- Configure CMake Project"
+echo "-- Build Debug Binaries"
 
-cd development/cmake
-cmake -B build/sdk --fresh --preset ${CMAKE_PRESET} -DBUILD_sdk=ON -DVENDOR_CACHE_DIRECTORY=/f/.cache/ccl ${CMAKE_BUILD_OPTIONS}
+cd "${BUILD_DIR}" && cmake --build . --config Debug
 
-echo "-- Build Debug and Release"
+echo "-- Sign Debug Binaries"
 
-cd build/sdk && cmake --build . --config Debug && cmake --build . --config Release
-
-echo "-- Sign Binaries"
-
-cmake --build . --config Debug --target sign_ccl_binaries && cmake --build . --config Release --target sign_ccl_binaries
+cmake --build . --config Debug --target sign_ccl_binaries
 
 echo "-- Build Installer"
 

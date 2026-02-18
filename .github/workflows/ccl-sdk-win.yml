@@ -66,8 +66,9 @@ jobs:
             -e ccl_SIGNING_CERTIFICATE_WIN="${{ secrets.SIGNING_CERTIFICATE_WIN }}" \
             -e ccl_SIGNING_TIMESTAMP_SERVER_WIN="${{ vars.SIGNING_TIMESTAMP_SERVER_WIN }}" \
             -e ccl_SIGNING_AZURE_SECRET="${{ secrets.SIGNING_AZURE_SECRET_WIN }}" \
+            -e BUILD_REVISION="${{ github.run_number }}" \
             ghcr.io/cclsoftware/${{ matrix.image }} \
-            bash ./.github/ci/win/build_sdk.sh ${{ github.run_number }}    
+            bash ./.github/ci/win/build_sdk.sh
           
       - name: Archive artifacts
         uses: actions/upload-artifact@v4

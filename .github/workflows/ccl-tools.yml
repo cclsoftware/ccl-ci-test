@@ -1,0 +1,50 @@
+name: CCL Tools
+
+concurrency:
+  group: ccl-tools
+  
+permissions:
+  contents: read
+  packages: read
+
+on: 
+  workflow_dispatch:
+    inputs:
+      buildWin:
+        description: 'Build Tools for Windows'
+        type: boolean
+        required: true
+        default: true
+      buildMac:
+        description: 'Build Tools for Mac'
+        type: boolean
+        required: true
+        default: true
+      buildLinux:
+        description: 'Build Tools for Linux'
+        type: boolean
+        required: true
+        default: true
+
+jobs:
+
+  #build-linux-tools:
+  #  if: ${{ inputs.buildLinux }}
+  #  uses: ./.github/workflows/ccl-tools-container.yml
+  #  permissions:
+  #    contents: read
+  #    packages: read
+  #  secrets: inherit
+    
+  build-windows-tools:
+    if: ${{ inputs.buildWin }}
+    uses: ./.github/workflows/ccl-tools-win.yml
+    permissions:
+      contents: read
+      packages: read
+    secrets: inherit
+    
+  #build-macos-tools:
+  #  if: ${{ inputs.buildMac }}
+  #  uses: ./.github/workflows/ccl-tools-mac.yml
+  #  secrets: inherit
