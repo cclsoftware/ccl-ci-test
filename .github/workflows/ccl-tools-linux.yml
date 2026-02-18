@@ -1,4 +1,4 @@
-name: CCL SDK for Linux
+name: CCL Tools for Linux
 
 concurrency:
   group: ccl-tools-linux

@@ -15,7 +15,6 @@ jobs:
           - host: ubuntu-latest
             image: ccl-linux-sdk:22.04
             targetos: linux
-            signbinaries: false
             
     runs-on: ${{matrix.host}}
     
