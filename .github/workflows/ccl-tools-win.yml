@@ -25,13 +25,13 @@ jobs:
     steps:
     
       - name: Prepare build environment
-        uses: ./.github/ci/win/prepare-build-environment.yml
+        uses: ./.github/ci/win/prepare-build-environment
         with:
           image: ${{ matrix.image }}
           targetos: ${{ matrix.targetos }}
     
       - name: Build CCL Tools in container
-        uses: ./.github/ci/win/build-cmake-target.yml
+        uses: ./.github/ci/win/build-cmake-target
         with:
           image: ${{ matrix.image }}
           dockerargs: |
@@ -41,7 +41,7 @@ jobs:
             -e CPACK_TARGET="archive"
        
       - name: Build CCL Public Tools in container
-        uses: ./.github/ci/win/build-cmake-target.yml
+        uses: ./.github/ci/win/build-cmake-target
         with:
           image: ${{ matrix.image }}
           dockerargs: |
@@ -51,7 +51,7 @@ jobs:
             -e CPACK_TARGET="publictoolspackage" \   
             
       - name: Build Core Tools in container
-        uses: ./.github/ci/win/build-cmake-target.yml
+        uses: ./.github/ci/win/build-cmake-target
         with:
           image: ${{ matrix.image }}
           dockerargs: |
