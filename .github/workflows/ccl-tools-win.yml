@@ -31,12 +31,14 @@ jobs:
   
       - name: Prepare build environment
         uses: ./.github/ci/win/prepare-build-environment
+        secrets: inherit
         with:
           image: ${{ matrix.image }}
           targetos: ${{ matrix.targetos }}
     
       - name: Build CCL Tools in container
         uses: ./.github/ci/win/build-cmake-target
+        secrets: inherit
         with:
           image: ${{ matrix.image }}
           dockerargs: |
@@ -47,6 +49,7 @@ jobs:
        
       - name: Build CCL Public Tools in container
         uses: ./.github/ci/win/build-cmake-target
+        secrets: inherit
         with:
           image: ${{ matrix.image }}
           dockerargs: |
@@ -57,6 +60,7 @@ jobs:
             
       - name: Build Core Tools in container
         uses: ./.github/ci/win/build-cmake-target
+        secrets: inherit
         with:
           image: ${{ matrix.image }}
           dockerargs: |

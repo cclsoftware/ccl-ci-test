@@ -31,6 +31,7 @@ jobs:
     
       - name: Prepare build environment
         uses: ./.github/ci/win/prepare-build-environment
+        secrets: inherit
         with:
           image: ${{ matrix.image }}
           targetos: ${{ matrix.targetos }}
