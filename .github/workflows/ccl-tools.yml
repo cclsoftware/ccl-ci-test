@@ -42,7 +42,6 @@ jobs:
     permissions:
       contents: read
       packages: read
-    secrets: inherit
     
   #build-macos-tools:
   #  if: ${{ inputs.buildMac }}
