@@ -29,7 +29,7 @@ jobs:
       - name: Run build script
         uses: ./.github/ci/mac/execute-build-script
         with:
-          image: build_sdk.sh
+          script: build_sdk.sh
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
