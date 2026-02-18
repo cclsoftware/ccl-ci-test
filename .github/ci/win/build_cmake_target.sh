@@ -24,7 +24,7 @@ echo "-- Sign Release Binaries"
 
 cmake --build . --config Release --target sign_ccl_binaries
 
-if [ -z ${CPACK_TARGET+x} ]; then
+if [ ! -z ${CPACK_TARGET+x} ]; then
 
 	echo "-- Building Package"
 	
