@@ -5,7 +5,7 @@ scriptdir=$(dirname "$0")
 cidir="${scriptdir}/.."
 
 export BUILD_DIR=build/sdk
-export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS} -DBUILD_sdk=ON"
+export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS:-} -DBUILD_sdk=ON"
            
 source ${scriptdir}/build_cmake_target.sh
 

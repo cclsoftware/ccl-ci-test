@@ -43,7 +43,7 @@ jobs:
       - name: Prepare SDK build environment
         shell: bash
         run: |
-          .github/ci/${{matrix.targetos }}/prepare_sdk_environment.sh
+          source .github/ci/${{matrix.targetos }}/prepare_sdk_environment.sh
           
       - name: Fix Linux Arm64 build
         if: ${{ matrix.targetos == 'linux' }}
@@ -55,7 +55,7 @@ jobs:
       - name: Configure CMake Project
         shell: bash
         run: |
-          .github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
+          source .github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
         env:
           BUILD_DIR: "build/sdk"
           CMAKE_BUILD_OPTIONS: "${CMAKE_BUILD_OPTIONS} -DBUILD_sdk=ON"
@@ -64,7 +64,7 @@ jobs:
         shell: bash
         run: |
           cd development/cmake/build/sdk  
-          ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/build_cmake_target.sh
+          source ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/build_cmake_target.sh
         env:
           BUILD_CONFIG: Release
        
@@ -72,7 +72,7 @@ jobs:
         shell: bash
         run: |
           cd development/cmake/build/sdk  
-          ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/build_cmake_target.sh
+          source ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/build_cmake_target.sh
         env:
           BUILD_CONFIG: Debug
        
