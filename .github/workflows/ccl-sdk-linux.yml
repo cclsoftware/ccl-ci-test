@@ -36,7 +36,7 @@ jobs:
           submodules: recursive
     
       - name: Prepare build environment
-        uses: ./.github/ci/${{ matrix.targetos }}/prepare-build-environment
+        uses: ./.github/ci/linux/prepare-build-environment
         with:
           targetos: ${{ matrix.targetos }}
     
