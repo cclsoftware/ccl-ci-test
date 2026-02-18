@@ -14,23 +14,23 @@ inputs:
     required: true
     default: ''
   signclientid:
-    description: 'Signing Key Vault'
+    description: 'Signing Client ID'
     required: true
     default: ''
   signtenantid:
-    description: 'Signing Key Vault'
+    description: 'Signing Tenant ID'
     required: true
     default: ''
   signcert:
-    description: 'Signing Key Vault'
+    description: 'Signing Certificate'
     required: true
     default: ''
   signserver:
-    description: 'Signing Key Vault'
+    description: 'Signing Key Serve'
     required: true
     default: ''  
   signsecret:
-    description: 'Signing Key Vault'
+    description: 'Signing Secret'
     required: true
     default: ''
   
