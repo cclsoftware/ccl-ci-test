@@ -1,7 +1,7 @@
-name: CCL SDK for Mac
+name: CCL Tools for Mac
 
 concurrency:
-  group: ccl-sdk-mac
+  group: ccl-tools-mac
 
 defaults:
   run:
@@ -24,11 +24,11 @@ jobs:
       - name: Run build script
         uses: ./.github/ci/mac/execute-build-script
         with:
-          image: build_sdk.sh
+          image: build_tools.sh
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ccl-sdk-${{matrix.targetos}}
+          name: ccl-tools-${{matrix.targetos}}
           path: |
             build/deployment/mac/*.*

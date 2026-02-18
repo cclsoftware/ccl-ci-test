@@ -1,0 +1,71 @@
+name: Run script in build environment
+  
+defaults:
+run:
+  shell: bash
+
+inputs:
+  script:
+    description: 'Shell script to execute'
+    required: true
+  
+runs:
+  using: "composite"
+  steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Output status
+        run: |
+          echo "Runner: $RUNNER_NAME"
+          echo "OS: $RUNNER_OS"
+          echo "Image: $ImageOS"
+          echo "Hostname: $(hostname)"
+          echo "User: $(whoami)"
+          pwd
+      
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+
+      - name: Setup CCL cache
+        id: cache-ccl
+        uses: actions/cache@v5
+        with:
+          path: .cache/ccl
+          key: cclcache-${{ matrix.targetos }}-${{ github.ref_name }}
+
+      - name: Log pre-run CCL cache
+        run: ls -lR .cache
+
+      - name: Prepare environment
+        env:
+          SIGNING_CERTIFICATE_MAC: ${{ vars.SIGNING_CERTIFICATE_MAC }}
+        run: |
+          .github/ci/${{matrix.targetos}}/prepare_sdk_environment.sh
+
+      - name: Prepare workingcopy
+        run: |
+          .github/ci/shared/prepare_workingcopy.sh ${{github.run_number}}
+
+      - name: Build
+        env:
+          APPLE_DEVELOPERID_CERTIFICATE_BASE64: ${{ secrets.APPLE_DEVELOPERID_CERTIFICATE_BASE64 }}
+          APPLE_DEVELOPERID_CERTIFICATE_P12_PASSWORD: ${{ secrets.APPLE_DEVELOPERID_CERTIFICATE_P12_PASSWORD }}
+          APPLE_DEVELOPMENT_CERTIFICATE_BASE64: ${{ secrets.APPLE_DEVELOPMENT_CERTIFICATE_BASE64 }}
+          APPLE_DEVELOPMENT_CERTIFICATE_P12_PASSWORD: ${{ secrets.APPLE_DEVELOPMENT_CERTIFICATE_P12_PASSWORD }}
+          APPLE_DISTRIBUTION_CERTIFICATE_BASE64: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE_BASE64 }}
+          APPLE_DISTRIBUTION_CERTIFICATE_P12_PASSWORD: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE_P12_PASSWORD }}
+          APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
+          APPLE_API_KEY_BASE64: ${{ secrets.APPLE_API_KEY_BASE64 }}
+          APPLE_API_KEY_FILENAME: ${{ vars.APPLE_API_KEY_FILENAME }}
+          APPLE_API_KEYID: ${{ vars.APPLE_API_KEYID }}
+          APPLE_API_ISSUER: ${{ vars.APPLE_API_ISSUER }}
+        run: |
+          .github/ci/mac/setup_keychain.sh
+          .github/ci/mac/configure_system.sh
+          .github/ci/mac/${{ inputs.script }}
+
+      - name: Log post-run CCL cache
+        run: ls -lR .cache

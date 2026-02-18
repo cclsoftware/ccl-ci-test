@@ -50,8 +50,8 @@ jobs:
       packages: read
     secrets: inherit
     
-  build-macos-sdk:
-    if: ${{ inputs.buildMac }}
-    needs: build-android-sdk
-    uses: ./.github/workflows/ccl-sdk-mac.yml
-    secrets: inherit
+  # build-macos-sdk:
+  #   if: ${{ inputs.buildMac }}
+  #   needs: build-android-sdk
+  #   uses: ./.github/workflows/ccl-sdk-mac.yml
+  #   secrets: inherit
