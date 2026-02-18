@@ -1,7 +1,7 @@
 name: CCL SDK for Linux
 
 concurrency:
-  group: ccl-sdk-container
+  group: ccl-tools-linux
   
 on: workflow_call
   
@@ -15,8 +15,7 @@ jobs:
           - host: ubuntu-latest
             image: ccl-linux-base:22.04
             targetos: linux
-            signbinaries: false
-            
+    
     runs-on: ${{matrix.host}}
     
     permissions:
