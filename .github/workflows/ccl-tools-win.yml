@@ -43,7 +43,7 @@ jobs:
             -e BUILD_REVISION="${{ github.run_number }}" \
             -e BUILD_DIR="build/tools" \
             -e CMAKE_BUILD_OPTIONS="-DBUILD_tools=ON" \
-            -e CPACK_TARGET="archive"
+            -e CPACK_TARGET="archive" \
        
       - name: Build CCL Public Tools in container
         uses: ./.github/ci/win/build-cmake-target
@@ -53,7 +53,7 @@ jobs:
             -e BUILD_REVISION="${{ github.run_number }}" \
             -e BUILD_DIR="build/publictools" \
             -e CMAKE_BUILD_OPTIONS="-DBUILD_public_tools=ON" \
-            -e CPACK_TARGET="publictoolspackage" \   
+            -e CPACK_TARGET="publictoolspackage" \
             
       - name: Build Core Tools in container
         uses: ./.github/ci/win/build-cmake-target

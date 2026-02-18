@@ -29,31 +29,12 @@ jobs:
         with:
           submodules: recursive
     
-      - name: Setup CCL cache
-        id: cache-ccl
-        uses: actions/cache@v5
+      - name: Prepare build environment
+        uses: ./.github/ci/win/prepare-build-environment
         with:
-          path: .cache/ccl
-          key: cclcache-${{ matrix.targetos }}-${{ github.ref_name }}
-          
-      - name: Fix signing
-        shell: bash
-        run: |
-          cd framework
-          git apply ../patches/windows-signing.patch
+          image: ${{ matrix.image }}
+          targetos: ${{ matrix.targetos }}
     
-      - name: Log into registry
-        uses: docker/login-action@v3.1.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Pull container
-        shell: bash
-        run: |
-          docker pull ghcr.io/cclsoftware/${{matrix.image}}
-              
       - name: Build in container
         shell: bash
         run: |
