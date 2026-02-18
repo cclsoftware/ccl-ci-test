@@ -1,8 +1,4 @@
 name: Run script in build environment
-  
-defaults:
-run:
-  shell: bash
 
 inputs:
   script:
@@ -18,6 +14,7 @@ runs:
           submodules: recursive
 
       - name: Output status
+        shell: bash
         run: |
           echo "Runner: $RUNNER_NAME"
           echo "OS: $RUNNER_OS"
@@ -37,19 +34,23 @@ runs:
           key: cclcache-${{ matrix.targetos }}-${{ github.ref_name }}
 
       - name: Log pre-run CCL cache
+        shell: bash
         run: ls -lR .cache
 
       - name: Prepare environment
+        shell: bash
         env:
           SIGNING_CERTIFICATE_MAC: ${{ vars.SIGNING_CERTIFICATE_MAC }}
         run: |
           .github/ci/${{matrix.targetos}}/prepare_sdk_environment.sh
 
       - name: Prepare workingcopy
+        shell: bash
         run: |
           .github/ci/shared/prepare_workingcopy.sh ${{github.run_number}}
 
       - name: Build
+        shell: bash      
         env:
           APPLE_DEVELOPERID_CERTIFICATE_BASE64: ${{ secrets.APPLE_DEVELOPERID_CERTIFICATE_BASE64 }}
           APPLE_DEVELOPERID_CERTIFICATE_P12_PASSWORD: ${{ secrets.APPLE_DEVELOPERID_CERTIFICATE_P12_PASSWORD }}
@@ -68,4 +69,5 @@ runs:
           .github/ci/mac/${{ inputs.script }}
 
       - name: Log post-run CCL cache
+        shell: bash
         run: ls -lR .cache
