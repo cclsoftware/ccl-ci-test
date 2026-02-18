@@ -16,7 +16,7 @@ jobs:
             image: ccl-win-sdk:latest
             targetos: win
             
-    runs-on: ${{matrix.host}}
+    runs-on: ${{ matrix.host }}
     
     permissions:
       contents: read
@@ -36,17 +36,6 @@ jobs:
           path: .cache/ccl
           key: cclcache-${{ matrix.targetos }}-${{ github.ref_name }}
           
-      - name: Prepare signing
-        shell: bash
-        run: |
-          signfile="./build/signing/ccl/signing.cmake"
-          echo 'set (SIGNING_AZURE_KEYVAULT_WIN "'"${{ secrets.SIGNING_AZURE_KEYVAULT_WIN }}"'")' >> "${signfile}"
-          echo 'set (SIGNING_AZURE_CLIENTID_WIN "'"${{ secrets.SIGNING_AZURE_CLIENTID_WIN }}"'")' >> "${signfile}"
-          echo 'set (SIGNING_AZURE_TENANTID_WIN "'"${{ secrets.SIGNING_AZURE_TENANTID_WIN }}"'")' >> "${signfile}"  
-          echo 'set (SIGNING_CERTIFICATE_WIN "'"${{ secrets.SIGNING_CERTIFICATE_WIN }}"'")' >> "${signfile}"
-          echo 'set (SIGNING_TIMESTAMP_SERVER_WIN "'"${{ vars.SIGNING_TIMESTAMP_SERVER_WIN }}"'")' >> "${signfile}"
-          cat build/signing/ccl/signing.cmake
-        
       - name: Fix signing
         shell: bash
         run: |
@@ -69,11 +58,16 @@ jobs:
         shell: bash
         run: |
           docker run \
-            --volume "${{github.workspace}}:F:" \
+            --volume "${{ github.workspace }}:F:" \
             --workdir "F:\\" \
+            -e ccl_SIGNING_AZURE_KEYVAULT_WIN="${{ secrets.SIGNING_AZURE_KEYVAULT_WIN }}" \
+            -e ccl_SIGNING_AZURE_CLIENTID_WIN="${{ secrets.SIGNING_AZURE_CLIENTID_WIN }}" \
+            -e ccl_SIGNING_AZURE_TENANTID_WIN="${{ secrets.SIGNING_AZURE_TENANTID_WIN }}" \
+            -e ccl_SIGNING_CERTIFICATE_WIN="${{ secrets.SIGNING_CERTIFICATE_WIN }}" \
+            -e ccl_SIGNING_TIMESTAMP_SERVER_WIN="${{ vars.SIGNING_TIMESTAMP_SERVER_WIN }}" \
             -e ccl_SIGNING_AZURE_SECRET="${{ secrets.SIGNING_AZURE_SECRET_WIN }}" \
-            ghcr.io/cclsoftware/${{matrix.image}} \
-            bash ./.github/ci/win/build_sdk.sh ${{github.run_number}}    
+            ghcr.io/cclsoftware/${{ matrix.image }} \
+            bash ./.github/ci/win/build_sdk.sh ${{ github.run_number }}    
           
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
