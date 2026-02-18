@@ -1,8 +1,8 @@
 diff --git a/core/cmake/coremacros.win.cmake b/core/cmake/coremacros.win.cmake
-index b350d58..1310c8f 100644
+index b350d58..b7b5839 100644
 --- a/core/cmake/coremacros.win.cmake
 +++ b/core/cmake/coremacros.win.cmake
-@@ -320,7 +320,7 @@ macro (ccl_configure_project_vendor vendor)
+@@ -320,12 +320,13 @@ macro (ccl_configure_project_vendor vendor)
  		ccl_get_sign_args (sign_args "${vendor}")
  		
  		find_program (CMD REQUIRED NAMES cmd)
@@ -11,7 +11,13 @@ index b350d58..1310c8f 100644
  		cmake_path (NATIVE_PATH sign_script NORMALIZE sign_script_native)
  		find_file (sign_extensions_script NAMES "sign_extensions.bat" PATHS "${REPOSITORY_ROOT}/build/win")
  		cmake_path (NATIVE_PATH sign_extensions_script NORMALIZE sign_extensions_script_native)
-@@ -350,15 +350,15 @@ macro (ccl_configure_project_vendor vendor)
+ 		
+ 		ccl_get_build_output_directory (artifacts_directory)
++		cmake_path (NATIVE_PATH artifacts_directory NORMALIZE artifacts_directory)
+ 	
+ 		if (sign_script AND sign_extensions_script)
+ 		
+@@ -350,15 +351,15 @@ macro (ccl_configure_project_vendor vendor)
  			
  		else ()
  		
@@ -25,9 +31,9 @@ index b350d58..1310c8f 100644
 -				COMMAND "${CMD}" /c "${sign_script_native}" ${sign_args} "${artifacts_directory}/*.exe"
 -				COMMAND "${CMD}" /c "${sign_script_native}" ${sign_args} "${artifacts_directory}/*.dll"
 -				COMMAND "${CMD}" /c "${sign_script_native}" ${sign_args} "${artifacts_directory}/Plugins/*.dll"
-+				COMMAND "${CMD}" /c "${sign_file_script_native}" ${sign_args} "${artifacts_directory}/*.exe"
-+				COMMAND "${CMD}" /c "${sign_file_script_native}" ${sign_args} "${artifacts_directory}/*.dll"
-+				COMMAND "${CMD}" /c "${sign_file_script_native}" ${sign_args} "${artifacts_directory}/Plugins/*.dll"
++				COMMAND "${CMD}" /c "${sign_file_script_native}" ${sign_args} "${artifacts_directory}\\*.exe"
++				COMMAND "${CMD}" /c "${sign_file_script_native}" ${sign_args} "${artifacts_directory}\\*.dll"
++				COMMAND "${CMD}" /c "${sign_file_script_native}" ${sign_args} "${artifacts_directory}\\Plugins\\*.dll"
  				COMMAND "${CMD}" /c "${${vendor}_SIGNING_POST_COMMAND}"
  				VERBATIM
  			)
