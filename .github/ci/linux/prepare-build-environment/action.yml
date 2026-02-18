@@ -11,7 +11,7 @@ runs:
   steps:
     
     - name: Setup ccache
-      if: matrix.targetos != 'win'
+      if: inputs.targetos != 'win'
       uses: hendrikmuhs/ccache-action@v1.2
         
     - name: Setup CCL cache
@@ -24,7 +24,7 @@ runs:
     - name: Prepare environment
       shell: bash
       run: |
-        .github/ci/${{matrix.targetos}}/prepare_build_environment.sh
+        .github/ci/${{inputs.targetos}}/prepare_build_environment.sh
           
     - name: Prepare workingcopy
       shell: bash
@@ -32,7 +32,7 @@ runs:
         .github/ci/shared/prepare_workingcopy.sh ${{github.run_number}}
       
     - name: Build CCL tools
-      if: ${{ matrix.targetos == 'linux' }}
+      if: ${{ inputs.targetos == 'linux' }}
       shell: bash
       run: |
         cd development/cmake
