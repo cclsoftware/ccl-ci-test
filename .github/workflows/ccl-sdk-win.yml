@@ -80,4 +80,4 @@ jobs:
         with:
           name: ccl-sdk-${{matrix.targetos}}
           path: |
-            build/cmake/archive/*.*
+            build/cmake/archive/*.exe
