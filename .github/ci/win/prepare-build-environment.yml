@@ -1,0 +1,46 @@
+name: Prepare Windows Build Environment
+  
+inputs:
+  image:
+    description: 'Docker Image'
+    required: true
+    default: 'ccl-win-base:latest'
+  targetos:
+    description: 'Target Operating System'
+    required: true
+    default: 'win'
+  
+runs:
+  using: "composite"
+  steps:
+    
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+  
+    - name: Setup CCL cache
+      id: cache-ccl
+      uses: actions/cache@v5
+      with:
+        path: .cache/ccl
+        key: cclcache-${{ inputs.targetos }}-${{ github.ref_name }}
+        
+    - name: Fix signing
+      shell: bash
+      run: |
+        cd framework
+        git apply ../patches/windows-signing.patch
+  
+    - name: Log into registry
+      uses: docker/login-action@v3.1.0
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Pull container
+      shell: bash
+      run: |
+        docker pull ghcr.io/cclsoftware/${{ inputs.image }}
+            

@@ -1,0 +1,32 @@
+name: Prepare Windows Build Environment
+  
+inputs:
+  image:
+    description: 'Docker Image'
+    required: true
+    default: 'ccl-win-base:latest'
+  dockerargs:
+    description: 'Additional Docker Arguments'
+    required: false
+    default: ''
+  
+runs:
+  using: "composite"
+  steps:
+    
+    - name: Build CMake Target
+      shell: bash
+      run: |
+        docker run \
+          --volume "${{ github.workspace }}:F:" \
+          --workdir "F:\\" \
+          -e ccl_SIGNING_AZURE_KEYVAULT_WIN="${{ secrets.SIGNING_AZURE_KEYVAULT_WIN }}" \
+          -e ccl_SIGNING_AZURE_CLIENTID_WIN="${{ secrets.SIGNING_AZURE_CLIENTID_WIN }}" \
+          -e ccl_SIGNING_AZURE_TENANTID_WIN="${{ secrets.SIGNING_AZURE_TENANTID_WIN }}" \
+          -e ccl_SIGNING_CERTIFICATE_WIN="${{ secrets.SIGNING_CERTIFICATE_WIN }}" \
+          -e ccl_SIGNING_TIMESTAMP_SERVER_WIN="${{ vars.SIGNING_TIMESTAMP_SERVER_WIN }}" \
+          -e ccl_SIGNING_AZURE_SECRET="${{ secrets.SIGNING_AZURE_SECRET_WIN }}" \
+          ${{ inputs.dockerargs }} \
+          ghcr.io/cclsoftware/${{ inputs.image }} \
+          bash ./.github/ci/win/build_cmake_target.sh
+          

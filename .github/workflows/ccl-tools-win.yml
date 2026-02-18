@@ -24,93 +24,42 @@ jobs:
       
     steps:
     
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Prepare build environment
+        uses: ./.github/ci/win/prepare-build-environment.yml
         with:
-          submodules: recursive
+          image: ${{ matrix.image }}
+          targetos: ${{ matrix.targetos }}
     
-      - name: Setup CCL cache
-        id: cache-ccl
-        uses: actions/cache@v5
-        with:
-          path: .cache/ccl
-          key: cclcache-${{ matrix.targetos }}-${{ github.ref_name }}
-          
-      - name: Fix signing
-        shell: bash
-        run: |
-          cd framework
-          git apply ../patches/windows-signing.patch
-    
-      - name: Log into registry
-        uses: docker/login-action@v3.1.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Pull container
-        shell: bash
-        run: |
-          docker pull ghcr.io/cclsoftware/${{matrix.image}}
-              
       - name: Build CCL Tools in container
-        shell: bash
-        run: |
-          docker run \
-            --volume "${{ github.workspace }}:F:" \
-            --workdir "F:\\" \
-            -e ccl_SIGNING_AZURE_KEYVAULT_WIN="${{ secrets.SIGNING_AZURE_KEYVAULT_WIN }}" \
-            -e ccl_SIGNING_AZURE_CLIENTID_WIN="${{ secrets.SIGNING_AZURE_CLIENTID_WIN }}" \
-            -e ccl_SIGNING_AZURE_TENANTID_WIN="${{ secrets.SIGNING_AZURE_TENANTID_WIN }}" \
-            -e ccl_SIGNING_CERTIFICATE_WIN="${{ secrets.SIGNING_CERTIFICATE_WIN }}" \
-            -e ccl_SIGNING_TIMESTAMP_SERVER_WIN="${{ vars.SIGNING_TIMESTAMP_SERVER_WIN }}" \
-            -e ccl_SIGNING_AZURE_SECRET="${{ secrets.SIGNING_AZURE_SECRET_WIN }}" \
+        uses: ./.github/ci/win/build-cmake-target.yml
+        with:
+          image: ${{ matrix.image }}
+          dockerargs: |
             -e BUILD_REVISION="${{ github.run_number }}" \
             -e BUILD_DIR="build/tools" \
             -e CMAKE_BUILD_OPTIONS="-DBUILD_tools=ON" \
-            -e CPACK_TARGET="archive" \
-            ghcr.io/cclsoftware/${{ matrix.image }} \
-            bash ./.github/ci/win/build_cmake_target.sh
-          
-      - name: Build Public CCL Tools in container
-        shell: bash
-        run: |
-          docker run \
-            --volume "${{ github.workspace }}:F:" \
-            --workdir "F:\\" \
-            -e ccl_SIGNING_AZURE_KEYVAULT_WIN="${{ secrets.SIGNING_AZURE_KEYVAULT_WIN }}" \
-            -e ccl_SIGNING_AZURE_CLIENTID_WIN="${{ secrets.SIGNING_AZURE_CLIENTID_WIN }}" \
-            -e ccl_SIGNING_AZURE_TENANTID_WIN="${{ secrets.SIGNING_AZURE_TENANTID_WIN }}" \
-            -e ccl_SIGNING_CERTIFICATE_WIN="${{ secrets.SIGNING_CERTIFICATE_WIN }}" \
-            -e ccl_SIGNING_TIMESTAMP_SERVER_WIN="${{ vars.SIGNING_TIMESTAMP_SERVER_WIN }}" \
-            -e ccl_SIGNING_AZURE_SECRET="${{ secrets.SIGNING_AZURE_SECRET_WIN }}" \
+            -e CPACK_TARGET="archive"
+       
+      - name: Build CCL Public Tools in container
+        uses: ./.github/ci/win/build-cmake-target.yml
+        with:
+          image: ${{ matrix.image }}
+          dockerargs: |
             -e BUILD_REVISION="${{ github.run_number }}" \
             -e BUILD_DIR="build/publictools" \
             -e CMAKE_BUILD_OPTIONS="-DBUILD_public_tools=ON" \
-            -e CPACK_TARGET="publictoolspackage" \
-            ghcr.io/cclsoftware/${{ matrix.image }} \
-            bash ./.github/ci/win/build_cmake_target.sh
-          
+            -e CPACK_TARGET="publictoolspackage" \   
+            
       - name: Build Core Tools in container
-        shell: bash
-        run: |
-          docker run \
-            --volume "${{ github.workspace }}:F:" \
-            --workdir "F:\\" \
-            -e ccl_SIGNING_AZURE_KEYVAULT_WIN="${{ secrets.SIGNING_AZURE_KEYVAULT_WIN }}" \
-            -e ccl_SIGNING_AZURE_CLIENTID_WIN="${{ secrets.SIGNING_AZURE_CLIENTID_WIN }}" \
-            -e ccl_SIGNING_AZURE_TENANTID_WIN="${{ secrets.SIGNING_AZURE_TENANTID_WIN }}" \
-            -e ccl_SIGNING_CERTIFICATE_WIN="${{ secrets.SIGNING_CERTIFICATE_WIN }}" \
-            -e ccl_SIGNING_TIMESTAMP_SERVER_WIN="${{ vars.SIGNING_TIMESTAMP_SERVER_WIN }}" \
-            -e ccl_SIGNING_AZURE_SECRET="${{ secrets.SIGNING_AZURE_SECRET_WIN }}" \
+        uses: ./.github/ci/win/build-cmake-target.yml
+        with:
+          image: ${{ matrix.image }}
+          dockerargs: |
             -e BUILD_REVISION="${{ github.run_number }}" \
             -e BUILD_DIR="build/coretools" \
             -e CMAKE_BUILD_OPTIONS="-DBUILD_core_tools=ON" \
             -e CPACK_TARGET="package" \
-            ghcr.io/cclsoftware/${{ matrix.image }} \
-            bash ./.github/ci/win/build_cmake_target.sh
-          
+       
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
         with:
