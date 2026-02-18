@@ -55,10 +55,10 @@ jobs:
       - name: Configure CMake Project
         shell: bash
         run: |
+          export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS:-} -DBUILD_sdk=ON"
           source .github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
         env:
           BUILD_DIR: "build/sdk"
-          CMAKE_BUILD_OPTIONS: "${CMAKE_BUILD_OPTIONS} -DBUILD_sdk=ON"
        
       - name: Build Release Binaries
         shell: bash

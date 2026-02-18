@@ -43,34 +43,34 @@ jobs:
       - name: Build CCL Tools
         shell: bash
         run: |
+          export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS:-} -DBUILD_tools=ON"
           source ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
           cd ${BUILD_DIR} 
           source ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/build_cmake_target.sh
         env:
           BUILD_DIR: "build/tools"
-          CMAKE_BUILD_OPTIONS: "${CMAKE_BUILD_OPTIONS} -DBUILD_tools=ON"
           BUILD_CONFIG: Release
        
       - name: Build CCL Public Tools
         shell: bash
         run: |
+          export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS:-} -DBUILD_public_tools=ON"
           source ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
           cd ${BUILD_DIR}
           source ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/build_cmake_target.sh
         env:
           BUILD_DIR: "build/publictools"
-          CMAKE_BUILD_OPTIONS: "${CMAKE_BUILD_OPTIONS} -DBUILD_public_tools=ON"
           BUILD_CONFIG: Release
        
       - name: Build Core Tools
         shell: bash
         run: |
+          export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS:-} -DBUILD_core_tools=ON"
           source ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
           cd ${BUILD_DIR}
           source ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/build_cmake_target.sh
         env:
           BUILD_DIR: "build/coretools"
-          CMAKE_BUILD_OPTIONS: "${CMAKE_BUILD_OPTIONS} -DBUILD_core_tools=ON"
           BUILD_CONFIG: Release
        
       - name: Archive artifacts
