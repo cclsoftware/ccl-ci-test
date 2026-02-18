@@ -5,6 +5,7 @@ scriptdir=$(dirname "$0")
 cidir="${scriptdir}/.."
 
 builddir=${BUILD_DIR-build}
+buildconfig=${BUILD_CONFIG-Release}
 
 echo "-- Prepare Build Environment"
 
@@ -16,18 +17,18 @@ echo "-- Configure CMake Project"
 cd development/cmake
 cmake -B "${builddir}" --fresh --preset ${CMAKE_PRESET} -DVENDOR_CACHE_DIRECTORY=/f/.cache/ccl ${CMAKE_BUILD_OPTIONS}
 
-echo "-- Build Release Binaries"
+echo "-- Build"
 
-cd "${builddir}" && cmake --build . --config Release
+cd "${builddir}" && cmake --build . --config ${buildconfig}
 
-echo "-- Sign Release Binaries"
+echo "-- Sign Binaries"
 
-cmake --build . --config Release --target sign_ccl_binaries
+cmake --build . --config ${buildconfig} --target sign_ccl_binaries
 
 if [ ! -z ${CPACK_TARGET+x} ]; then
 
-	echo "-- Building Package"
+	echo "-- Build Package"
 	
-	cmake --build . --config Release --target "${CPACK_TARGET}"
+	cmake --build . --config ${buildconfig} --target "${CPACK_TARGET}"
 
 fi

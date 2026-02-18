@@ -28,13 +28,13 @@ on:
 
 jobs:
 
-  #build-linux-tools:
-  #  if: ${{ inputs.buildLinux }}
-  #  uses: ./.github/workflows/ccl-tools-container.yml
-  #  permissions:
-  #    contents: read
-  #    packages: read
-  #  secrets: inherit
+  build-linux-tools:
+    if: ${{ inputs.buildLinux }}
+    uses: ./.github/workflows/ccl-tools-linux.yml
+    permissions:
+      contents: read
+      packages: read
+    secrets: inherit
     
   build-windows-tools:
     if: ${{ inputs.buildWin }}

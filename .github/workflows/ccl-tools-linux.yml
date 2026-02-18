@@ -1,0 +1,79 @@
+name: CCL SDK for Linux
+
+concurrency:
+  group: ccl-sdk-container
+  
+on: workflow_call
+  
+jobs:
+  build:
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - host: ubuntu-latest
+            image: ccl-linux-base:22.04
+            targetos: linux
+            signbinaries: false
+            
+    runs-on: ${{matrix.host}}
+    
+    permissions:
+      contents: read
+      packages: read
+      
+    container:
+      image: ghcr.io/cclsoftware/${{matrix.image}}
+      credentials:
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+        
+    steps:
+    
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+    
+      - name: Prepare build environment
+        uses: ./.github/ci/${{ matrix.targetos }}/prepare-build-environment
+        with:
+          targetos: ${{ matrix.targetos }}
+    
+      - name: Build CCL Tools
+        shell: bash
+        run: |
+          .github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
+          .github/ci/${{ matrix.targetos }}/build_cmake_target.sh
+        env:
+          BUILD_DIR: "build/tools"
+          CMAKE_BUILD_OPTIONS: "${CMAKE_BUILD_OPTIONS} -DBUILD_tools=ON"
+          BUILD_CONFIG: Release
+       
+      - name: Build CCL Public Tools
+        shell: bash
+        run: |
+          .github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
+          .github/ci/${{ matrix.targetos }}/build_cmake_target.sh
+        env:
+          BUILD_DIR: "build/publictools"
+          CMAKE_BUILD_OPTIONS: "${CMAKE_BUILD_OPTIONS} -DBUILD_public_tools=ON"
+          BUILD_CONFIG: Release
+       
+      - name: Build Core Tools
+        shell: bash
+        run: |
+          .github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
+          .github/ci/${{ matrix.targetos }}/build_cmake_target.sh
+        env:
+          BUILD_DIR: "build/coretools"
+          CMAKE_BUILD_OPTIONS: "${CMAKE_BUILD_OPTIONS} -DBUILD_core_tools=ON"
+          BUILD_CONFIG: Release
+       
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ccl-tools-${{matrix.targetos}}
+          path: |
+            build/cmake/archive/*.zip

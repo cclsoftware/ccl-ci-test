@@ -1,0 +1,45 @@
+name: Prepare Linux Build Environment
+  
+inputs:
+  targetos:
+    description: 'Target Operating System'
+    required: true
+    default: 'linux'
+  
+runs:
+  using: "composite"
+  steps:
+    
+    - name: Setup ccache
+      if: matrix.targetos != 'win'
+      uses: hendrikmuhs/ccache-action@v1.2
+        
+    - name: Setup CCL cache
+      id: cache-ccl
+      uses: actions/cache@v5
+      with:
+        path: .cache/ccl
+        key: cclcache-${{ inputs.targetos }}-${{ github.ref_name }}
+        
+    - name: Prepare environment
+      shell: bash
+      run: |
+        .github/ci/${{matrix.targetos}}/prepare_build_environment.sh
+          
+    - name: Prepare workingcopy
+      shell: bash
+      run: |
+        .github/ci/shared/prepare_workingcopy.sh ${{github.run_number}}
+      
+    - name: Build CCL tools
+      if: ${{ matrix.targetos == 'linux' }}
+      shell: bash
+      run: |
+        cd development/cmake
+        cmake -B build/tools --fresh --preset linux-release -DBUILD_tools=ON ${CMAKE_BUILD_OPTIONS} \
+          -DVENDOR_BUILDOUTPUT_DIRECTORY=${GITHUB_WORKSPACE}/framework/tools/bin/linux/ccl/x86_64 \
+          -DVENDOR_CACHE_DIRECTORY=${GITHUB_WORKSPACE}/.cache/ccl
+        cd build/tools
+        cmake --build . --target cclpackage
+        cmake --build . --target crypt
+                    

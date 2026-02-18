@@ -13,7 +13,7 @@ jobs:
       matrix:
         include:
           - host: windows-2025
-            image: ccl-win-sdk:latest
+            image: ccl-win-base:latest
             targetos: win
             
     runs-on: ${{ matrix.host }}

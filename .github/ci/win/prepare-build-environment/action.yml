@@ -14,11 +14,6 @@ runs:
   using: "composite"
   steps:
     
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        submodules: recursive
-  
     - name: Setup CCL cache
       id: cache-ccl
       uses: actions/cache@v5
