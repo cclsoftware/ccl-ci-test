@@ -43,8 +43,9 @@ jobs:
       - name: Build CCL Tools
         shell: bash
         run: |
-          .github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
-          .github/ci/${{ matrix.targetos }}/build_cmake_target.sh
+          ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
+          cd development/cmake/build/sdk  
+          ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/build_cmake_target.sh
         env:
           BUILD_DIR: "build/tools"
           CMAKE_BUILD_OPTIONS: "${CMAKE_BUILD_OPTIONS} -DBUILD_tools=ON"
@@ -53,8 +54,9 @@ jobs:
       - name: Build CCL Public Tools
         shell: bash
         run: |
-          .github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
-          .github/ci/${{ matrix.targetos }}/build_cmake_target.sh
+          ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
+          cd development/cmake/build/sdk  
+          ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/build_cmake_target.sh
         env:
           BUILD_DIR: "build/publictools"
           CMAKE_BUILD_OPTIONS: "${CMAKE_BUILD_OPTIONS} -DBUILD_public_tools=ON"
@@ -63,8 +65,9 @@ jobs:
       - name: Build Core Tools
         shell: bash
         run: |
-          .github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
-          .github/ci/${{ matrix.targetos }}/build_cmake_target.sh
+          ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
+          cd development/cmake/build/sdk  
+          ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/build_cmake_target.sh
         env:
           BUILD_DIR: "build/coretools"
           CMAKE_BUILD_OPTIONS: "${CMAKE_BUILD_OPTIONS} -DBUILD_core_tools=ON"

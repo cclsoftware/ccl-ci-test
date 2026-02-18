@@ -63,17 +63,17 @@ jobs:
       - name: Build Release Binaries
         shell: bash
         run: |
-          .github/ci/${{ matrix.targetos }}/build_cmake_target.sh
+          cd development/cmake/build/sdk  
+          ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/build_cmake_target.sh
         env:
-          BUILD_DIR: "build/sdk"
           BUILD_CONFIG: Release
        
       - name: Build Debug Binaries
         shell: bash
         run: |
-          .github/ci/${{ matrix.targetos }}/build_cmake_target.sh
+          cd development/cmake/build/sdk  
+          ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/build_cmake_target.sh
         env:
-          BUILD_DIR: "build/sdk"
           BUILD_CONFIG: Debug
        
       - name: Package
