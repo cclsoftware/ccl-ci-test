@@ -11,7 +11,7 @@ source ${scriptdir}/build_cmake_target.sh
 
 echo "-- Build Debug Binaries"
 
-cd "${BUILD_DIR}" && cmake --build . --config Debug
+cmake --build . --config Debug
 
 echo "-- Sign Debug Binaries"
 
