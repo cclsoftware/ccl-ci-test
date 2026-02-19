@@ -42,13 +42,6 @@ runs:
         shell: bash
         run: ls -lR .cache
 
-      - name: Prepare environment
-        shell: bash
-        env:
-          SIGNING_CERTIFICATE_MAC: ${{ env.SIGNING_CERTIFICATE_MAC }}
-        run: |
-          .github/ci/${{matrix.targetos}}/prepare_sdk_environment.sh
-
       - name: Prepare workingcopy
         shell: bash
         run: |
@@ -68,6 +61,7 @@ runs:
           APPLE_API_KEY_FILENAME: ${{ env.APPLE_API_KEY_FILENAME }}
           APPLE_API_KEYID: ${{ env.APPLE_API_KEYID }}
           APPLE_API_ISSUER: ${{ env.APPLE_API_ISSUER }}
+          CMAKE_BUILD_OPTIONS: -DSIGNING_CERTIFICATE_MAC=${{ env.SIGNING_CERTIFICATE_MAC }} -DVENDOR_CACHE_DIRECTORY=${{ github.workspace }}/.cache/ccl"
         run: |
           .github/ci/mac/setup_keychain.sh
           .github/ci/mac/configure_system.sh
