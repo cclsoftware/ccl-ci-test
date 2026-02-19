@@ -31,7 +31,9 @@ runs:
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
-          key: ccache-${{ inputs.targetos }}-${{ github.ref_name }}
+          key: ccache-${{ inputs.targetos }}-${{ github.ref_name }}-${{ github.run_id }}
+          restore-keys: |
+             ccache-${{ inputs.targetos }}-${{ github.ref_name }}
 
       - name: Setup CCL cache
         id: cache-ccl
@@ -65,7 +67,8 @@ runs:
           APPLE_API_KEY_FILENAME: ${{ env.APPLE_API_KEY_FILENAME }}
           APPLE_API_KEYID: ${{ env.APPLE_API_KEYID }}
           APPLE_API_ISSUER: ${{ env.APPLE_API_ISSUER }}
-          CMAKE_BUILD_OPTIONS: -DSIGNING_CERTIFICATE_MAC=${{ env.SIGNING_CERTIFICATE_MAC }} -DVENDOR_CACHE_DIRECTORY=${{ github.workspace }}/.cache/ccl
+          SIGNING_CERTIFICATE_MAC: ${{ env.SIGNING_CERTIFICATE_MAC }}
+          CMAKE_BUILD_OPTIONS: -DVENDOR_USE_PUBLISHER_CERTIFICATE=ON -DSIGNING_CERTIFICATE_MAC=${{ env.SIGNING_CERTIFICATE_MAC }} -DVENDOR_CACHE_DIRECTORY=${{ github.workspace }}/.cache/ccl
         run: |
           .github/ci/mac/setup_keychain.sh
           .github/ci/mac/configure_system.sh

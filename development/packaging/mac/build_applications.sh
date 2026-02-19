@@ -10,8 +10,6 @@ artifactsdir="build/deployment/mac"
 
 mkdir -p "${artifactsdir}"
 
-IDENTITY=`xcrun codesign -dvv "build/deployment/mac/ccl/CCL Demo" 2>&1 | sed -n -E 's/Authority=(.*)/\1/p' | head -1`
-
 for appname in "${apps[@]}";
 do 
 	rm -rf "${tmpdir}"
@@ -20,9 +18,9 @@ do
     cp -R "build/cmake/mac/Release/${appname}.app" "${tmpdir}"
 	ln -s /Applications "${tmpdir}/Applications"
 	imagename="${artifactsdir}/${appname}.dmg"
-	${scriptdir}/codesign.sh "${tmpdir}/${appname}.app" "-o runtime" "${IDENTITY}"
+	${scriptdir}/../../../framework/build/mac/codesign.sh "${tmpdir}/${appname}.app" "-o runtime" ${SIGNING_CERTIFICATE_MAC}
 	hdiutil create -size 600m -fs HFS+ -volname "${appname}" -srcfolder "${tmpdir}" "${imagename}"
-	${scriptdir}/notarize.sh "${imagename}"
+	${scriptdir}/../../../framework/build/mac/notarize.sh "${imagename}" ${APPLE_API_KEYPATH} ${APPLE_API_KEYID} ${APPLE_API_ISSUER}
 	rm -rf "${tmpdir}"
 done
 

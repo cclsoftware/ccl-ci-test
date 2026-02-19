@@ -20,7 +20,7 @@ source .venv/bin/activate
 
 # build macOS SDK
 pushd development/cmake
-cmake --preset mac -DBUILD_sdk=ON -DVENDOR_USE_PUBLISHER_CERTIFICATE=ON ${CMAKE_BUILD_OPTIONS}
+cmake --preset mac -DBUILD_sdk=ON ${CMAKE_BUILD_OPTIONS}
 cmake --build build --config Debug -- -allowProvisioningUpdates -authenticationKeyPath "$APPLE_API_KEYPATH" -authenticationKeyID "$APPLE_API_KEYID"  -authenticationKeyIssuerID "$APPLE_API_ISSUER"
 cmake --build build --config Release -- -allowProvisioningUpdates -authenticationKeyPath "$APPLE_API_KEYPATH" -authenticationKeyID "$APPLE_API_KEYID"  -authenticationKeyIssuerID "$APPLE_API_ISSUER"
 popd
