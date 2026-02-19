@@ -26,13 +26,17 @@ runs:
       
       - name: Setup ccache
         uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: ccache-${{ inputs.targetos }}-${{ github.ref_name }}
 
       - name: Setup CCL cache
         id: cache-ccl
         uses: actions/cache@v5
         with:
           path: .cache/ccl
-          key: cclcache-${{ matrix.targetos }}-${{ github.ref_name }}
+          key: cclcache-${{ inputs.targetos }}-${{ github.ref_name }}-${{ github.run_id }}
+          restore-keys: |
+             cclcache-${{ inputs.targetos }}-${{ github.ref_name }}
 
       - name: Log pre-run CCL cache
         shell: bash
