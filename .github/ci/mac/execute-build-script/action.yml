@@ -40,7 +40,7 @@ runs:
 
       - name: Log pre-run CCL cache
         shell: bash
-        run: ls -lR .cache
+        run: test -d .cache && ls -lR .cache || echo ".cache missing"
 
       - name: Prepare workingcopy
         shell: bash
@@ -69,4 +69,4 @@ runs:
 
       - name: Log post-run CCL cache
         shell: bash
-        run: ls -lR .cache
+        run: test -d .cache && ls -lR .cache || echo ".cache missing"
