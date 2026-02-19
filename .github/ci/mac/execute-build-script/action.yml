@@ -2,6 +2,10 @@ name: Run script in build environment
 description: 'Action to run a shell script in the prepared build environment on Mac'
 
 inputs:
+  targetos:
+    description: 'Target Operating System'
+    required: true
+    default: 'mac'
   script:
     description: 'Shell script to execute'
     required: true
