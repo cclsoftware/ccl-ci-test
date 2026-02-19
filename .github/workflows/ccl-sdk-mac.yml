@@ -27,9 +27,22 @@ jobs:
           submodules: recursive
 
       - name: Run build script
-        uses: ./.github/ci/mac/execute-build-scripts
+        uses: ./.github/ci/mac/execute-build-script
         with:
           script: build_sdk.sh
+        env:
+          APPLE_DEVELOPERID_CERTIFICATE_BASE64: ${{ secrets.APPLE_DEVELOPERID_CERTIFICATE_BASE64 }}
+          APPLE_DEVELOPERID_CERTIFICATE_P12_PASSWORD: ${{ secrets.APPLE_DEVELOPERID_CERTIFICATE_P12_PASSWORD }}
+          APPLE_DEVELOPMENT_CERTIFICATE_BASE64: ${{ secrets.APPLE_DEVELOPMENT_CERTIFICATE_BASE64 }}
+          APPLE_DEVELOPMENT_CERTIFICATE_P12_PASSWORD: ${{ secrets.APPLE_DEVELOPMENT_CERTIFICATE_P12_PASSWORD }}
+          APPLE_DISTRIBUTION_CERTIFICATE_BASE64: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE_BASE64 }}
+          APPLE_DISTRIBUTION_CERTIFICATE_P12_PASSWORD: ${{ secrets.APPLE_DISTRIBUTION_CERTIFICATE_P12_PASSWORD }}
+          APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
+          APPLE_API_KEY_BASE64: ${{ secrets.APPLE_API_KEY_BASE64 }}
+          APPLE_API_KEY_FILENAME: ${{ vars.APPLE_API_KEY_FILENAME }}
+          APPLE_API_KEYID: ${{ vars.APPLE_API_KEYID }}
+          APPLE_API_ISSUER: ${{ vars.APPLE_API_ISSUER }}
+          SIGNING_CERTIFICATE_MAC: ${{ vars.SIGNING_CERTIFICATE_MAC }}
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
