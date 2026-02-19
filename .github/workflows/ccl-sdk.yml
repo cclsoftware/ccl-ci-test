@@ -32,7 +32,7 @@ jobs:
     uses: ./.github/workflows/ccl-sdk-android.yml
     secrets: inherit
 
-  build-in-docker:
+  build-linux-sdk:
     if: ${{ inputs.buildLinux }}
     needs: build-android-sdk
     uses: ./.github/workflows/ccl-sdk-linux.yml
@@ -41,7 +41,7 @@ jobs:
       packages: read
     secrets: inherit
     
-  build-for-win:
+  build-windows-sdk:
     if: ${{ inputs.buildWin }}
     needs: build-android-sdk
     uses: ./.github/workflows/ccl-sdk-win.yml
