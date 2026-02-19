@@ -14,7 +14,7 @@ runs:
       if: inputs.targetos != 'win'
       uses: hendrikmuhs/ccache-action@v1.2
       with:
-        key: cclcache-${{ inputs.targetos }}-${{ github.ref_name }}
+        key: ccache-${{ inputs.targetos }}-${{ github.ref_name }}
         
     - name: Setup CCL cache
       id: cache-ccl
