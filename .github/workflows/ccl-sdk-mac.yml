@@ -27,8 +27,7 @@ jobs:
           submodules: recursive
 
       - name: Run build script
-        uses: ./.github/ci/mac/execute-build-script
-        secrets: inherit
+        uses: ./.github/ci/mac/execute-build-scripts
         with:
           script: build_sdk.sh
 
