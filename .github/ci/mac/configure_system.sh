@@ -11,9 +11,6 @@ pip install sphinx==6.2.1 sphinx_rtd_theme==2.0.0 breathe==4.35.0
 npm install typedoc@0.23.28 --global
 brew install doxygen
 
-# ccache
-brew install ccache
-
 # configure Xcode version
 xcodes select 16.0
 # output system info 
