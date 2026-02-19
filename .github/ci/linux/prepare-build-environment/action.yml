@@ -17,6 +17,8 @@ runs:
         key: ccache-${{ inputs.targetos }}-${{ github.ref_name }}-${{ github.run_id }}
         restore-keys: |
           ccache-${{ inputs.targetos }}-${{ github.ref_name }}
+        create-symlink: true
+        append-timestamp: false
         
     - name: Setup CCL cache
       id: cache-ccl
