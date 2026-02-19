@@ -50,6 +50,7 @@ jobs:
         env:
           BUILD_DIR: "build/tools"
           BUILD_CONFIG: Release
+          CPACK_TARGET: archive
        
       - name: Build CCL Public Tools
         shell: bash
@@ -61,6 +62,7 @@ jobs:
         env:
           BUILD_DIR: "build/publictools"
           BUILD_CONFIG: Release
+          CPACK_TARGET: publictoolspackage
        
       - name: Build Core Tools
         shell: bash
@@ -72,6 +74,7 @@ jobs:
         env:
           BUILD_DIR: "build/coretools"
           BUILD_CONFIG: Release
+          CPACK_TARGET: package
        
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
