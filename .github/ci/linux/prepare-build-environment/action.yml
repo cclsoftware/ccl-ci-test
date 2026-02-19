@@ -35,11 +35,17 @@ runs:
       if: ${{ inputs.targetos == 'linux' }}
       shell: bash
       run: |
-        cd development/cmake
-        cmake -B build/tools --fresh --preset linux-release -DBUILD_tools=ON ${CMAKE_BUILD_OPTIONS} \
-          -DVENDOR_BUILDOUTPUT_DIRECTORY=${GITHUB_WORKSPACE}/framework/tools/bin/linux/ccl/x86_64 \
-          -DVENDOR_CACHE_DIRECTORY=${GITHUB_WORKSPACE}/.cache/ccl
-        cd build/tools
-        cmake --build . --target cclpackage
-        cmake --build . --target crypt
+        echo "-- Test if cclpackage is executable"
+        command_failed=0
+        ${GITHUB_WORKSPACE}/framework/tools/bin/linux/ccl/x86_64/cclpackage || command_failed=1
+        if [ ${command_failed:-0} -eq 1 ]; then
+          echo "-- Build required tools"
+          cd development/cmake
+          cmake -B build/tools --fresh --preset linux-release -DBUILD_tools=ON ${CMAKE_BUILD_OPTIONS} \
+            -DVENDOR_BUILDOUTPUT_DIRECTORY=${GITHUB_WORKSPACE}/framework/tools/bin/linux/ccl/x86_64 \
+            -DVENDOR_CACHE_DIRECTORY=${GITHUB_WORKSPACE}/.cache/ccl
+          cd build/tools
+          cmake --build . --target cclpackage
+          cmake --build . --target crypt
+        fi
                     
