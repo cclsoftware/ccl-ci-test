@@ -42,9 +42,9 @@ runs:
       if: ${{ inputs.targetos == 'linux' }}
       shell: bash
       run: |
-        echo "-- Test if cclpackage is executable"
+        echo "-- Test if CCL tools are executable"
         command_failed=0
-        ${GITHUB_WORKSPACE}/framework/tools/bin/linux/ccl/x86_64/cclpackage || command_failed=1
+        ${GITHUB_WORKSPACE}/framework/tools/bin/linux/ccl/x86_64/cclmakeguid || command_failed=1
         if [ ${command_failed:-0} -eq 1 ]; then
           echo "-- Build required tools"
           cd development/cmake
