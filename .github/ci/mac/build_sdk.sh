@@ -16,7 +16,7 @@ export APPLE_API_KEYID
 export APPLE_API_ISSUER
 
 # Python virtual environment
-source .venv/bin/activate
+#source .venv/bin/activate
 
 # build macOS SDK
 pushd development/cmake
