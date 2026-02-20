@@ -12,6 +12,7 @@ echo "-- Waiting for Docker to be ready..."
 while [ "$elapsed" -lt "$timeout" ]; do
     if docker info > /dev/null 2>&1; then
         echo "Docker is ready!"
+		docker pull "${image}"
         exit 0
     fi
 
@@ -22,5 +23,3 @@ done
 
 echo "ERROR: Docker did not become ready within ${timeout} seconds."
 exit 1
-
-docker pull "${image}"
