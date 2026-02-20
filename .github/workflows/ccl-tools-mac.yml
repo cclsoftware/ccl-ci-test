@@ -50,4 +50,4 @@ jobs:
         with:
           name: ccl-tools-${{matrix.targetos}}
           path: |
-            build/deployment/mac/*.*
+            *.zip
