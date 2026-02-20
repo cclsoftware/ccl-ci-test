@@ -44,7 +44,7 @@ jobs:
       packages: read
     secrets: inherit
     
-  #build-macos-tools:
-  #  if: ${{ inputs.buildMac }}
-  #  uses: ./.github/workflows/ccl-tools-mac.yml
-  #  secrets: inherit
+  build-macos-tools:
+   if: ${{ inputs.buildMac }}
+   uses: ./.github/workflows/ccl-tools-mac.yml
+   secrets: inherit
