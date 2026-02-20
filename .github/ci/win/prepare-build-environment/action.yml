@@ -39,5 +39,5 @@ runs:
     - name: Pull container
       shell: bash
       run: |
-        docker pull ghcr.io/cclsoftware/${{ inputs.image }}
-            
+        ./.github/ci/win/pull_container.sh "ghcr.io/cclsoftware/${{ inputs.image }}"
+        
