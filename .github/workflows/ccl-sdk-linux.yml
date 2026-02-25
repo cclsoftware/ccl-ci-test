@@ -44,7 +44,7 @@ jobs:
           submodules: recursive
 
       - name: Download documentation
-        if: inputs.importartifacts != ''
+        if: inputs.docartifact != ''
         uses: actions/download-artifact@v5
         with:
           artifact-ids: ${{ inputs.docartifact }}
