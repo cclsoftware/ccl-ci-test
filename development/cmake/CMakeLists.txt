@@ -139,7 +139,7 @@ endif ()
 # Documentation
 
 option (BUILD_documentation "Build Documentation" OFF)
-if (BUILD_sdk AND NOT ANDROID)
+if (BUILD_sdk AND NOT ANDROID AND NOT CCL_DOCUMENTATION_DIR)
 	set (BUILD_documentation ON CACHE BOOL "" FORCE)
 endif ()
 if (BUILD_documentation)
