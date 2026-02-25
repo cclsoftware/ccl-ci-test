@@ -20,7 +20,7 @@ export APPLE_API_ISSUER
 
 # build macOS SDK
 pushd development/cmake
-cmake --preset mac -DBUILD_sdk=ON ${CMAKE_BUILD_OPTIONS}
+cmake --preset mac -DBUILD_sdk=ON ${CMAKE_BUILD_OPTIONS} -DBUILD_documentation=OFF -DCCL_DOCUMENTATION_DIR=${GITHUB_WORKSPACE}/.docs
 cmake --build build --config Debug -- -allowProvisioningUpdates -authenticationKeyPath "$APPLE_API_KEYPATH" -authenticationKeyID "$APPLE_API_KEYID"  -authenticationKeyIssuerID "$APPLE_API_ISSUER"
 cmake --build build --config Release -- -allowProvisioningUpdates -authenticationKeyPath "$APPLE_API_KEYPATH" -authenticationKeyID "$APPLE_API_KEYID"  -authenticationKeyIssuerID "$APPLE_API_ISSUER"
 popd
@@ -36,7 +36,7 @@ popd
 
 # build iOS SDK
 pushd development/cmake
-cmake --preset ios --fresh -DBUILD_sdk=ON ${CMAKE_BUILD_OPTIONS}
+cmake --preset ios --fresh -DBUILD_sdk=ON ${CMAKE_BUILD_OPTIONS} -DBUILD_documentation=OFF -DCCL_DOCUMENTATION_DIR=${GITHUB_WORKSPACE}/.docs
 cmake --build build --config Debug -- -allowProvisioningUpdates -authenticationKeyPath "$APPLE_API_KEYPATH" -authenticationKeyID "$APPLE_API_KEYID"  -authenticationKeyIssuerID "$APPLE_API_ISSUER"
 cmake --build build --config Release -- -allowProvisioningUpdates -authenticationKeyPath "$APPLE_API_KEYPATH" -authenticationKeyID "$APPLE_API_KEYID"  -authenticationKeyIssuerID "$APPLE_API_ISSUER"
 pushd build
