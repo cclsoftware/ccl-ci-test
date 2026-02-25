@@ -14,7 +14,7 @@ option (BUILD_sdk "Build CCL SDK" OFF)
 if (BUILD_sdk)
 	set (CCL_SYSTEM_INSTALL ON CACHE BOOL "" FORCE)
 	set (CCL_DISABLE_CPACK ON CACHE INTERNAL "" FORCE) # disable packaging for components, create a single SDK package instead
-	
+
 	if (APPLE)
 		string (REPLACE ";" "-" ARCH_NAME "${VENDOR_TARGET_ARCHITECTURE}") # for Apple universal binaries (mac-x86_64;arm64 is ONE configuration)
 	else ()
@@ -28,9 +28,9 @@ if (BUILD_sdk)
 	elseif (UNIX AND NOT APPLE)
 		set (PROJECT_VERSION_SUBDIRECTORY "ccl/5.1.0") # TODO: parse version number?
 	endif ()
-	
+
 	find_package (corelib REQUIRED COMPONENTS corelib coreextras-extensions coreextras-games coreextras-web)
-	find_package (ccl REQUIRED COMPONENTS 
+	find_package (ccl REQUIRED COMPONENTS
 		cclbase ccltext cclapp cclsystem cclsecurity cclnet cclgui
 		cclextras-analytics cclextras-devices cclextras-extensions
 		cclextras-firebase cclextras-gadgets cclextras-packages cclextras-portable
@@ -78,18 +78,18 @@ if (BUILD_public_tools)
 	set (PROJECT_APPLICATION_RUNTIME_DIRECTORY "bin/${VENDOR_PLATFORM}/ccl")
 	set (CCL_ENABLE_LIBUNISTRING OFF CACHE BOOL "" FORCE)
 	set (CCL_INSTALL_TOOLS ON)
-	
+
 	add_subdirectory (${CCL_REPOSITORY_ROOT}/tools/ccl/crypt/cmake crypt)
 	add_subdirectory (${CCL_REPOSITORY_ROOT}/tools/ccl/makebin/cmake makebin)
 	add_subdirectory (${CCL_REPOSITORY_ROOT}/tools/ccl/makeguid/cmake makeguid)
 	add_subdirectory (${CCL_REPOSITORY_ROOT}/tools/ccl/package/cmake package)
-	
-	install (FILES 
+
+	install (FILES
 		${CCL_IDENTITIES_DIR}/ccl/legal/CCL\ 3rd\ Party\ Licenses.txt
 		${CCL_IDENTITIES_DIR}/ccl/eula/EULA.txt
 		DESTINATION "."
 	)
-	
+
 	set (CPACK_GENERATOR "ZIP")
 	set (CPACK_PACKAGE_NAME "CCL CLI Tools")
 	set (CPACK_PACKAGE_VERSION_MAJOR ${CCL_VERSION_MAJOR})
@@ -101,7 +101,7 @@ if (BUILD_public_tools)
 	add_custom_target (publictoolspackage COMMAND "${CMAKE_CPACK_COMMAND}" "-C" "$<CONFIGURATION>" "--config" "${CMAKE_BINARY_DIR}/PublicToolsPackageConfig.cmake")
 endif ()
 
-# Tools 
+# Tools
 
 option (BUILD_tools "Build CCL tools" OFF)
 if (BUILD_sdk AND NOT ANDROID AND NOT IOS)
@@ -118,7 +118,7 @@ if (BUILD_core_tools)
 	add_subdirectory (${CCL_REPOSITORY_ROOT}/tools/core/cmake coretools)
 endif ()
 
-# Services 
+# Services
 
 option (BUILD_services "Build CCL services" OFF)
 if (BUILD_sdk)
@@ -144,6 +144,8 @@ if (BUILD_sdk AND NOT ANDROID)
 endif ()
 if (BUILD_documentation)
 	add_documentation ()
+elseif (CCL_DOCUMENTATION_DIR)
+	install_documentation ("${CCL_DOCUMENTATION_DIR}")
 endif ()
 
 # SDK package
@@ -161,7 +163,7 @@ if (BUILD_sdk)
 	set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_LIST_DIR}/../packaging/resource/license.txt")
 
 	ccl_include_platform_specifics (sdk)
-	
+
 	include (${CCL_REPOSITORY_ROOT}/ccl/cmake/ccl-install.cmake)
 
 	install (FILES
@@ -193,10 +195,10 @@ if (BUILD_sdk)
 
 		cpack_add_component (prebuilt_libraries_android_x64 DISPLAY_NAME "android_x64" DESCRIPTION "Prebuilt libraries targeting Android x64" GROUP prebuilt_libraries DEPENDS public_headers_android prebuilt_libraries_android_java)
 		cpack_add_component (services_android_x64 DISPLAY_NAME "android_x64" DESCRIPTION "Prebuilt services targeting Android x64" GROUP services DEPENDS prebuilt_libraries_android_x64 services_android_java)
-		
+
 		set (android_library_destination "${CCL_STATIC_LIBRARY_DESTINATION}/..")
 		cmake_path (NORMAL_PATH android_library_destination)
-		
+
 		if(NOT "${CCL_SUPPORT_DESTINATION}" STREQUAL ".")
 			set (android_build_support_destination "${CCL_SUPPORT_DESTINATION}/build")
 		else ()
@@ -262,7 +264,7 @@ if (BUILD_sdk)
 	include (CPack)
 	add_custom_target (sdkpackage COMMAND "${CMAKE_CPACK_COMMAND}" "-C" "$<CONFIGURATION>" "--config" "${CMAKE_BINARY_DIR}/SdkPackageConfig.cmake")
 	set_target_properties (sdkpackage PROPERTIES USE_FOLDERS ON FOLDER "cmake")
-	
+
 	if (WIN32)
 		ccl_sign_files (signed_sdkpackage "${PROJECT_VENDOR}" "${CPACK_PACKAGE_DIRECTORY}/*.exe")
 	endif ()

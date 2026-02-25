@@ -7,7 +7,14 @@ defaults:
   run:
     shell: bash
 
-on: workflow_call
+on:
+  workflow_call:
+    inputs:
+      docartifact:
+        description: 'Documentation Artifact ID'
+        required: false
+        default: ''
+        type: string
 
 jobs:
   build:

@@ -1,16 +1,14 @@
-name: CCL SDK for Linux
+name: CCL SDK Documentation
 
 concurrency:
-  group: ccl-sdk-linux
+  group: ccl-sdk-documentation
   
 on:
   workflow_call:
-    inputs:
-      docartifact:
-        description: 'Documentation Artifact ID'
-        required: false
-        default: ''
-        type: string
+    outputs:
+      artifact-id:
+        description: "Uploaded artifact ID"
+        value: ${{ jobs.build.outputs.artifact-id }}
   
 jobs:
   build:
@@ -30,6 +28,9 @@ jobs:
       packages: read
       actions: read
       
+    outputs:
+      artifact-id: ${{ steps.artifact-upload-step.outputs.artifact-id }}
+
     container:
       image: ghcr.io/cclsoftware/${{matrix.image}}
       credentials:
@@ -43,14 +44,6 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Download documentation
-        if: inputs.importartifacts != ''
-        uses: actions/download-artifact@v5
-        with:
-          artifact-ids: ${{ inputs.docartifact }}
-          path: ${{ github.workspace }}/.docs
-          merge-multiple: true
-
       - name: Prepare build environment
         uses: ./.github/ci/linux/prepare-build-environment
         with:
@@ -61,22 +54,15 @@ jobs:
         run: |
           source .github/ci/${{matrix.targetos }}/prepare_sdk_environment.sh
           
-      - name: Fix Linux Arm64 build
-        if: ${{ matrix.targetos == 'linux' }}
-        shell: bash
-        run: |
-          cd framework
-          git apply ../patches/linux-vulkan.patch
-        
       - name: Configure CMake Project
         shell: bash
         run: |
-          export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS:-} -DBUILD_sdk=ON -DBUILD_documentation=OFF -DCCL_DOCUMENTATION_DIR=${GITHUB_WORKSPACE}/.docs"
+          export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS:-} -DBUILD_documentation=ON"
           source .github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
         env:
           BUILD_DIR: "build/sdk"
        
-      - name: Build Release Binaries
+      - name: Build Documentation
         shell: bash
         run: |
           cd development/cmake/build/sdk  
@@ -84,24 +70,12 @@ jobs:
         env:
           BUILD_CONFIG: Release
        
-      - name: Build Debug Binaries
-        shell: bash
-        run: |
-          cd development/cmake/build/sdk  
-          source ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/build_cmake_target.sh
-        env:
-          BUILD_CONFIG: Debug
-       
-      - name: Package
-        shell: bash
-        run: |
-          cd development/cmake/build/sdk    
-          cpack -C 'Debug;Release' --config SdkPackageConfig.cmake ${CPACK_OPTIONS}
-          
       - name: Archive artifacts
-        uses: actions/upload-artifact@v4
+        id: artifact-upload-step
+        uses: actions/upload-artifact@v5
         with:
-          name: ccl-sdk-${{matrix.targetos}}
-          path: |
-            build/cmake/archive/*.gz
-            build/cmake/archive/*.sh
+          name: ccl-sdk-documentation
+          path: framework/tools/doctools/makedoc/output/dev.ccl.doc.cclpublicsdk/html/
+          retention-days: 1
+          overwrite: true
+          include-hidden-files: true

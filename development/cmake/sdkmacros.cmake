@@ -1,3 +1,5 @@
+include (ExternalProject)
+
 macro (add_sdk_preset preset)
 
 	option (BUILD_sdk_preset_${preset} "Build SDK preset ${preset}" ON)
@@ -8,7 +10,7 @@ macro (add_sdk_preset preset)
 		if (NOT preset_params_COMPONENT_SUFFIX)
 			set (preset_params_COMPONENT_SUFFIX ${preset})
 		endif ()
-	
+
 		if (NOT preset_params_BUILD_SUFFIX)
 			set (preset_params_BUILD_SUFFIX "${preset_params_COMPONENT_SUFFIX}")
 		endif ()
@@ -61,7 +63,7 @@ macro (add_sdk_preset preset)
 
 		set (sdk_debug_dir "${sdk_dest_dir}/Debug/_CPack_Packages/${preset}/ZIP/${CPACK_PACKAGE_NAME}-${CCL_VERSION}-${preset}")
 		set (sdk_release_dir "${sdk_dest_dir}/Release/_CPack_Packages/${preset}/ZIP/${CPACK_PACKAGE_NAME}-${CCL_VERSION}-${preset}")
-	
+
 		foreach (component public_headers prebuilt_libraries services)
 			file (MAKE_DIRECTORY ${sdk_debug_dir}/${component}_${preset_params_BUILD_SUFFIX})
 			file (MAKE_DIRECTORY ${sdk_release_dir}/${component}_${preset_params_BUILD_SUFFIX})
@@ -121,11 +123,16 @@ function (add_documentation)
 		#LOG_BUILD ON
 		#LOG_OUTPUT_ON_FAILURE ON
 	)
-	
+
 	set (ccl_support_dest_path "${CCL_SUPPORT_DESTINATION}/")
 	if ("${ccl_support_dest_path}" STREQUAL "./")
 		set (ccl_support_dest_path "")
 	endif ()
-	install (DIRECTORY "${output_path}" DESTINATION "${ccl_support_dest_path}documentation/" COMPONENT documentation)
 
+	install_documentation ("${output_path}")
+
+endfunction ()
+
+function (install_documentation from)
+	install (DIRECTORY "${from}" DESTINATION "${ccl_support_dest_path}documentation/" COMPONENT documentation)
 endfunction ()

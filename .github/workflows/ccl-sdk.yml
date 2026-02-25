@@ -6,6 +6,7 @@ concurrency:
 permissions:
   contents: read
   packages: read
+  actions: read
 
 on: 
   workflow_dispatch:
@@ -28,30 +29,42 @@ on:
 
 jobs:
 
+  build-documentation:
+    uses: ./.github/workflows/ccl-sdk-documentation.yml
+    secrets: inherit
+
   build-android-sdk:
     uses: ./.github/workflows/ccl-sdk-android.yml
     secrets: inherit
 
   build-linux-sdk:
     if: ${{ inputs.buildLinux }}
-    needs: build-android-sdk
+    needs: [build-android-sdk, build-documentation]
     uses: ./.github/workflows/ccl-sdk-linux.yml
+    with:
+      docartifact: ${{ needs.build-documentation.outputs.artifact-id }}
     permissions:
       contents: read
       packages: read
+      actions: read
     secrets: inherit
     
   build-windows-sdk:
     if: ${{ inputs.buildWin }}
-    needs: build-android-sdk
+    needs: [build-android-sdk, build-documentation]
     uses: ./.github/workflows/ccl-sdk-win.yml
+    with:
+      docartifact: ${{ needs.build-documentation.outputs.artifact-id }}
     permissions:
       contents: read
       packages: read
+      actions: read
     secrets: inherit
     
   build-macos-sdk:
     if: ${{ inputs.buildMac }}
-    needs: build-android-sdk
+    needs: [build-android-sdk, build-documentation]
+    with:
+      docartifact: ${{ needs.build-documentation.outputs.artifact-id }}
     uses: ./.github/workflows/ccl-sdk-mac.yml
     secrets: inherit
