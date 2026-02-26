@@ -15,6 +15,7 @@ source ${cidir}/shared/prepare_workingcopy.sh ${BUILD_REVISION}
 echo "-- Configure CMake Project"
 
 cd development/cmake
+echo "cmake -B \"${builddir}\" --fresh --preset ${CMAKE_PRESET} -DVENDOR_CACHE_DIRECTORY=/f/.cache/ccl ${CMAKE_BUILD_OPTIONS}"
 cmake -B "${builddir}" --fresh --preset ${CMAKE_PRESET} -DVENDOR_CACHE_DIRECTORY=/f/.cache/ccl ${CMAKE_BUILD_OPTIONS}
 
 echo "-- Build"
