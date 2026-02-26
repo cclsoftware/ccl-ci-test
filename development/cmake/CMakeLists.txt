@@ -139,13 +139,13 @@ endif ()
 # Documentation
 
 option (BUILD_documentation "Build Documentation" OFF)
-if (BUILD_sdk AND NOT ANDROID AND NOT CCL_DOCUMENTATION_DIR)
+if (BUILD_sdk AND NOT ANDROID AND NOT CCL_PREBUILT_DOCUMENTATION)
 	set (BUILD_documentation ON CACHE BOOL "" FORCE)
 endif ()
 if (BUILD_documentation)
 	add_documentation ()
-elseif (CCL_DOCUMENTATION_DIR)
-	install_documentation ("${CCL_DOCUMENTATION_DIR}")
+elseif (CCL_PREBUILT_DOCUMENTATION)
+	install_documentation ("${CCL_PREBUILT_DOCUMENTATION}")
 endif ()
 
 # SDK package

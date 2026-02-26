@@ -124,15 +124,15 @@ function (add_documentation)
 		#LOG_OUTPUT_ON_FAILURE ON
 	)
 
-	set (ccl_support_dest_path "${CCL_SUPPORT_DESTINATION}/")
-	if ("${ccl_support_dest_path}" STREQUAL "./")
-		set (ccl_support_dest_path "")
-	endif ()
-
 	install_documentation ("${output_path}")
 
 endfunction ()
 
 function (install_documentation from)
+	set (ccl_support_dest_path "${CCL_SUPPORT_DESTINATION}/")
+	if ("${ccl_support_dest_path}" STREQUAL "./")
+		set (ccl_support_dest_path "")
+	endif ()
+
 	install (DIRECTORY "${from}" DESTINATION "${ccl_support_dest_path}documentation/" COMPONENT documentation)
 endfunction ()
