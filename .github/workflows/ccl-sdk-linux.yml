@@ -71,7 +71,7 @@ jobs:
       - name: Configure CMake Project
         shell: bash
         run: |
-          export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS:-} -DBUILD_sdk=ON -DBUILD_documentation=OFF -DCCL_DOCUMENTATION_DIR=${GITHUB_WORKSPACE}/.docs"
+          export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS:-} -DBUILD_sdk=ON -DBUILD_documentation=OFF -DCCL_PREBUILT_DOCUMENTATION=${GITHUB_WORKSPACE}/.docs"
           source .github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
         env:
           BUILD_DIR: "build/sdk"

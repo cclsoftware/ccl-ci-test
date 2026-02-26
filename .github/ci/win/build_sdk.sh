@@ -5,7 +5,7 @@ scriptdir=$(dirname "$0")
 cidir="${scriptdir}/.."
 
 export BUILD_DIR=build/sdk
-export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS:-} -DBUILD_sdk=ON -DBUILD_documentation=OFF -DCCL_DOCUMENTATION_DIR=${DOCUMENTATION_DIR:-}"
+export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS:-} -DBUILD_sdk=ON -DBUILD_documentation=OFF -DCCL_PREBUILT_DOCUMENTATION=${DOCUMENTATION_DIR:-}"
 source ${scriptdir}/build_cmake_target.sh
 
 echo "-- Build Debug Binaries"
