@@ -134,5 +134,5 @@ function (install_documentation from)
 		set (ccl_support_dest_path "")
 	endif ()
 
-	install (DIRECTORY "${from}" DESTINATION "${ccl_support_dest_path}documentation/" COMPONENT documentation)
+	install (DIRECTORY "${from}/" DESTINATION "${ccl_support_dest_path}documentation/" COMPONENT documentation)
 endfunction ()
