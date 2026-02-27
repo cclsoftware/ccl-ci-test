@@ -42,7 +42,7 @@ macro (add_sdk_preset preset)
 			PREFIX "${CMAKE_BINARY_DIR}/sdk-${preset}"
 			SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}"
 			LIST_SEPARATOR "|"
-			CONFIGURE_COMMAND ${CMAKE_COMMAND} -S "${CMAKE_CURRENT_LIST_DIR}" -B "${build_dir}" --preset ${preset} -DVENDOR_ENABLE_CODESIGNING=${VENDOR_ENABLE_CODESIGNING} -DBUILD_sdk=ON -DBUILD_documentation=OFF -DCCL_PREBUILT_DOCUMENTATION="${CCL_PREBUILT_DOCUMENTATION}" -DCPACK_SYSTEM_NAME=${preset} -DVENDOR_ENABLE_PARALLEL_BUILDS=ON -DCPACK_ARCHIVE_COMPONENT_INSTALL=ON ${cmake_args}
+			CONFIGURE_COMMAND ${CMAKE_COMMAND} -S "${CMAKE_CURRENT_LIST_DIR}" -B "${build_dir}" --preset ${preset} -DVENDOR_ENABLE_CODESIGNING=${VENDOR_ENABLE_CODESIGNING} -DBUILD_sdk=ON -DBUILD_documentation=OFF -DCPACK_SYSTEM_NAME=${preset} -DVENDOR_ENABLE_PARALLEL_BUILDS=ON -DCPACK_ARCHIVE_COMPONENT_INSTALL=ON ${cmake_args}
 			BUILD_COMMAND ${CMAKE_COMMAND} -E echo "Building SDK configuration ${preset}" && ${CMAKE_COMMAND} --build "${build_dir}" ${build_config}
 			INSTALL_COMMAND ${sign_command}
 			COMMAND cpack -G ZIP -B ${sdk_dest_dir}/$<CONFIG> --config ${cpack_config} ${install_config}

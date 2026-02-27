@@ -138,10 +138,11 @@ endif ()
 
 # Documentation
 
-option (BUILD_documentation "Build Documentation" OFF)
+set (want_documentation OFF)
 if (BUILD_sdk AND NOT ANDROID AND NOT CCL_PREBUILT_DOCUMENTATION)
-	set (BUILD_documentation ON CACHE BOOL "" FORCE)
+	set (want_documentation ON)
 endif ()
+option (BUILD_documentation "Build Documentation" ${want_documentation})
 if (BUILD_documentation)
 	add_documentation ()
 elseif (CCL_PREBUILT_DOCUMENTATION)
