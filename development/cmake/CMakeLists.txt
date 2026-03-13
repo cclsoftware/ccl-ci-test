@@ -177,7 +177,7 @@ if (BUILD_sdk)
 	if (CCL_ANDROID_SDK_DIR)
 		if (UNIX AND NOT APPLE)
 			foreach (arch IN ITEMS armv7 arm64 i386 x86_64)
-				execute_process (COMMAND sed -i -e "s|\$\{_IMPORT_PREFIX\}/include|\$\{_IMPORT_PREFIX\}/include/${PROJECT_VERSION_SUBDIRECTORY}|g" "${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/android-${arch}/ccl-targets.cmake")
+				execute_process (COMMAND sed -i -e "s|\$\{_IMPORT_PREFIX\}/include|\$\{_IMPORT_PREFIX\}/include/${PROJECT_VERSION_SUBDIRECTORY}|g" "${CCL_ANDROID_SDK_DIR}/cmake/android-${arch}/ccl-targets.cmake")
 			endforeach ()
 		endif ()
 
@@ -206,60 +206,60 @@ if (BUILD_sdk)
 			set (android_build_support_destination "build")
 		endif ()
 
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/include/core/platform/android DESTINATION "${corelib_PUBLIC_HEADERS_DESTINATION}/platform" COMPONENT public_headers_android)
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/include/core/platform/shared/jni DESTINATION "${corelib_PUBLIC_HEADERS_DESTINATION}/platform/shared" COMPONENT public_headers_android)
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/include/core/platform/shared/posix DESTINATION "${corelib_PUBLIC_HEADERS_DESTINATION}/platform/shared" COMPONENT public_headers_android)
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/include/ccl/platform/android DESTINATION "${CCL_PUBLIC_HEADERS_DESTINATION}/platform" COMPONENT public_headers_android)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/include/core/platform/android DESTINATION "${corelib_PUBLIC_HEADERS_DESTINATION}/platform" COMPONENT public_headers_android)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/include/core/platform/shared/jni DESTINATION "${corelib_PUBLIC_HEADERS_DESTINATION}/platform/shared" COMPONENT public_headers_android)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/include/core/platform/shared/posix DESTINATION "${corelib_PUBLIC_HEADERS_DESTINATION}/platform/shared" COMPONENT public_headers_android)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/include/ccl/platform/android DESTINATION "${CCL_PUBLIC_HEADERS_DESTINATION}/platform" COMPONENT public_headers_android)
 
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/android-armv7 DESTINATION "${CCL_CMAKE_EXPORT_DESTINATION}" COMPONENT prebuilt_libraries_android_arm)
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/lib/android-armv7 DESTINATION "${android_library_destination}" COMPONENT prebuilt_libraries_android_arm PATTERN Plugins EXCLUDE)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/cmake/android-armv7 DESTINATION "${CCL_CMAKE_EXPORT_DESTINATION}" COMPONENT prebuilt_libraries_android_arm)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/lib/android-armv7 DESTINATION "${android_library_destination}" COMPONENT prebuilt_libraries_android_arm PATTERN Plugins EXCLUDE)
 
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/android-arm64 DESTINATION "${CCL_CMAKE_EXPORT_DESTINATION}" COMPONENT prebuilt_libraries_android_arm64)
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/lib/android-arm64 DESTINATION "${android_library_destination}" COMPONENT prebuilt_libraries_android_arm64 PATTERN Plugins EXCLUDE)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/cmake/android-arm64 DESTINATION "${CCL_CMAKE_EXPORT_DESTINATION}" COMPONENT prebuilt_libraries_android_arm64)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/lib/android-arm64 DESTINATION "${android_library_destination}" COMPONENT prebuilt_libraries_android_arm64 PATTERN Plugins EXCLUDE)
 
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/android-i386 DESTINATION "${CCL_CMAKE_EXPORT_DESTINATION}" COMPONENT prebuilt_libraries_android_x86)
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/lib/android-i386 DESTINATION "${android_library_destination}" COMPONENT prebuilt_libraries_android_x86 PATTERN Plugins EXCLUDE)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/cmake/android-i386 DESTINATION "${CCL_CMAKE_EXPORT_DESTINATION}" COMPONENT prebuilt_libraries_android_x86)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/lib/android-i386 DESTINATION "${android_library_destination}" COMPONENT prebuilt_libraries_android_x86 PATTERN Plugins EXCLUDE)
 
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/android-x86_64 DESTINATION "${CCL_CMAKE_EXPORT_DESTINATION}" COMPONENT prebuilt_libraries_android_x64)
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/lib/android-x86_64 DESTINATION "${android_library_destination}" COMPONENT prebuilt_libraries_android_x64 PATTERN Plugins EXCLUDE)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/cmake/android-x86_64 DESTINATION "${CCL_CMAKE_EXPORT_DESTINATION}" COMPONENT prebuilt_libraries_android_x64)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/lib/android-x86_64 DESTINATION "${android_library_destination}" COMPONENT prebuilt_libraries_android_x64 PATTERN Plugins EXCLUDE)
 
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/build/android DESTINATION "${android_build_support_destination}" COMPONENT prebuilt_libraries_android_java)
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/lib/android-java DESTINATION "${android_library_destination}" COMPONENT prebuilt_libraries_android_java PATTERN bluetoothservice.aar EXCLUDE)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/build/android DESTINATION "${android_build_support_destination}" COMPONENT prebuilt_libraries_android_java)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/lib/android-java DESTINATION "${android_library_destination}" COMPONENT prebuilt_libraries_android_java PATTERN bluetoothservice.aar EXCLUDE)
 
 		install (FILES
-			${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/cclapp.android.cmake
-			${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/cclbase.android.cmake
-			${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/cclextras-stores.android.cmake
-			${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/cclgui.android.cmake
-			${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/cclmacros.android.cmake
-			${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/cclnet.android.cmake
-			${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/ccltext.android.cmake
-			${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/cclsecurity.android.cmake
-			${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/cclsystem.android.cmake
-			${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/corelib.android.cmake
-			${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/coremacros.android.cmake
+			${CCL_ANDROID_SDK_DIR}/cmake/cclapp.android.cmake
+			${CCL_ANDROID_SDK_DIR}/cmake/cclbase.android.cmake
+			${CCL_ANDROID_SDK_DIR}/cmake/cclextras-stores.android.cmake
+			${CCL_ANDROID_SDK_DIR}/cmake/cclgui.android.cmake
+			${CCL_ANDROID_SDK_DIR}/cmake/cclmacros.android.cmake
+			${CCL_ANDROID_SDK_DIR}/cmake/cclnet.android.cmake
+			${CCL_ANDROID_SDK_DIR}/cmake/ccltext.android.cmake
+			${CCL_ANDROID_SDK_DIR}/cmake/cclsecurity.android.cmake
+			${CCL_ANDROID_SDK_DIR}/cmake/cclsystem.android.cmake
+			${CCL_ANDROID_SDK_DIR}/cmake/corelib.android.cmake
+			${CCL_ANDROID_SDK_DIR}/cmake/coremacros.android.cmake
 			DESTINATION "${CCL_CMAKE_EXPORT_DESTINATION}"
 			COMPONENT prebuilt_libraries_android_java
 		)
 
 		set (android_library_prefix "${android_library_destination}/android")
 		cmake_path (NORMAL_PATH android_library_prefix)
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/lib/android-armv7/Plugins DESTINATION "${android_library_prefix}-armv7" COMPONENT services_android_arm)
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/lib/android-arm64/Plugins DESTINATION "${android_library_prefix}-arm64" COMPONENT services_android_arm64)
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/lib/android-i386/Plugins DESTINATION "${android_library_prefix}-i386" COMPONENT services_android_x86)
-		install (DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/lib/android-x86_64/Plugins DESTINATION "${android_library_prefix}-x86_64" COMPONENT services_android_x64)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/lib/android-armv7/Plugins DESTINATION "${android_library_prefix}-armv7" COMPONENT services_android_arm)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/lib/android-arm64/Plugins DESTINATION "${android_library_prefix}-arm64" COMPONENT services_android_arm64)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/lib/android-i386/Plugins DESTINATION "${android_library_prefix}-i386" COMPONENT services_android_x86)
+		install (DIRECTORY ${CCL_ANDROID_SDK_DIR}/lib/android-x86_64/Plugins DESTINATION "${android_library_prefix}-x86_64" COMPONENT services_android_x64)
 
 		install (FILES
-			${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/bluetoothservice.android.cmake
-			${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/dapservice.android.cmake
-			${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/jsengine.android.cmake
-			${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/modelimporter3d.android.cmake
-			${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/cmake/sqlite.android.cmake
+			${CCL_ANDROID_SDK_DIR}/cmake/bluetoothservice.android.cmake
+			${CCL_ANDROID_SDK_DIR}/cmake/dapservice.android.cmake
+			${CCL_ANDROID_SDK_DIR}/cmake/jsengine.android.cmake
+			${CCL_ANDROID_SDK_DIR}/cmake/modelimporter3d.android.cmake
+			${CCL_ANDROID_SDK_DIR}/cmake/sqlite.android.cmake
 			DESTINATION "${CCL_CMAKE_EXPORT_DESTINATION}"
 			COMPONENT services_android_java
 		)
 
-		install (FILES ${CMAKE_CURRENT_LIST_DIR}/${CCL_ANDROID_SDK_DIR}/lib/android-java/bluetoothservice.aar DESTINATION "${android_library_prefix}-java" COMPONENT services_android_java)
+		install (FILES ${CCL_ANDROID_SDK_DIR}/lib/android-java/bluetoothservice.aar DESTINATION "${android_library_prefix}-java" COMPONENT services_android_java)
 	endif ()
 
 	include (CPack)

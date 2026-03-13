@@ -20,7 +20,7 @@ export APPLE_API_ISSUER
 
 # build macOS SDK
 pushd development/cmake
-cmake --preset mac -DBUILD_sdk=ON ${CMAKE_BUILD_OPTIONS} -DBUILD_documentation=OFF -DCCL_PREBUILT_DOCUMENTATION=${GITHUB_WORKSPACE}/.docs
+cmake --preset mac -DBUILD_sdk=ON ${CMAKE_BUILD_OPTIONS} -DBUILD_documentation=OFF -DCCL_PREBUILT_DOCUMENTATION=${GITHUB_WORKSPACE}/.docs -DCCL_ANDROID_SDK_DIR=${GITHUB_WORKSPACE}/.android
 cmake --build build --config Debug -- -allowProvisioningUpdates -authenticationKeyPath "$APPLE_API_KEYPATH" -authenticationKeyID "$APPLE_API_KEYID"  -authenticationKeyIssuerID "$APPLE_API_ISSUER"
 cmake --build build --config Release -- -allowProvisioningUpdates -authenticationKeyPath "$APPLE_API_KEYPATH" -authenticationKeyID "$APPLE_API_KEYID"  -authenticationKeyIssuerID "$APPLE_API_ISSUER"
 popd

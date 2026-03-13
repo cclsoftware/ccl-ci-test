@@ -11,6 +11,11 @@ on:
         required: false
         default: ''
         type: string
+      androidartifact:
+        description: 'Android SDK Artifact ID'
+        required: false
+        default: ''
+        type: string
 
 jobs:
   build:
@@ -45,6 +50,14 @@ jobs:
           path: ${{ github.workspace }}/.docs
           merge-multiple: true
 
+      - name: Download Android SDK
+        if: inputs.androidartifact != ''
+        uses: actions/download-artifact@v5
+        with:
+          artifact-ids: ${{ inputs.androidartifact }}
+          path: ${{ github.workspace }}/.android
+          merge-multiple: true
+
       - name: Prepare build environment
         uses: ./.github/ci/win/prepare-build-environment
         with:
@@ -65,6 +78,7 @@ jobs:
             -e ccl_SIGNING_AZURE_SECRET="${{ secrets.SIGNING_AZURE_SECRET_WIN }}" \
             -e BUILD_REVISION="${{ github.run_number }}" \
             -e DOCUMENTATION_DIR="/f/.docs" \
+            -e ANDROID_SDK_DIR="/f/.android" \
             ghcr.io/cclsoftware/${{ matrix.image }} \
             bash ./.github/ci/win/build_sdk.sh
           

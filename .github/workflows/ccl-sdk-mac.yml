@@ -15,6 +15,11 @@ on:
         required: false
         default: ''
         type: string
+      androidartifact:
+        description: 'Android SDK Artifact ID'
+        required: false
+        default: ''
+        type: string
 
 jobs:
   build:
@@ -44,6 +49,14 @@ jobs:
         with:
           artifact-ids: ${{ inputs.docartifact }}
           path: ${{ github.workspace }}/.docs
+          merge-multiple: true
+
+      - name: Download Android SDK
+        if: inputs.androidartifact != ''
+        uses: actions/download-artifact@v5
+        with:
+          artifact-ids: ${{ inputs.androidartifact }}
+          path: ${{ github.workspace }}/.android
           merge-multiple: true
 
       - name: Run build script

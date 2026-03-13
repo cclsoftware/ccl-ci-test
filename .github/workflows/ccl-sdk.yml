@@ -26,6 +26,11 @@ on:
         type: boolean
         required: true
         default: true
+      buildAndroid:
+        description: 'Build Android SDK'
+        type: boolean
+        required: true
+        default: true
 
 jobs:
 
@@ -34,7 +39,12 @@ jobs:
     secrets: inherit
 
   build-android-sdk:
+    if: ${{ inputs.buildAndroid }}
     uses: ./.github/workflows/ccl-sdk-android.yml
+    permissions:
+      contents: read
+      packages: read
+      actions: read
     secrets: inherit
 
   build-linux-sdk:
@@ -43,6 +53,7 @@ jobs:
     uses: ./.github/workflows/ccl-sdk-linux.yml
     with:
       docartifact: ${{ needs.build-documentation.outputs.artifact-id }}
+      androidartifact: ${{ needs.build-android-sdk.outputs.artifact-id }}
     permissions:
       contents: read
       packages: read
@@ -55,6 +66,7 @@ jobs:
     uses: ./.github/workflows/ccl-sdk-win.yml
     with:
       docartifact: ${{ needs.build-documentation.outputs.artifact-id }}
+      androidartifact: ${{ needs.build-android-sdk.outputs.artifact-id }}
     permissions:
       contents: read
       packages: read
@@ -66,5 +78,6 @@ jobs:
     needs: [build-android-sdk, build-documentation]
     with:
       docartifact: ${{ needs.build-documentation.outputs.artifact-id }}
+      androidartifact: ${{ needs.build-android-sdk.outputs.artifact-id }}
     uses: ./.github/workflows/ccl-sdk-mac.yml
     secrets: inherit

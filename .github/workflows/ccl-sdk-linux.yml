@@ -11,6 +11,11 @@ on:
         required: false
         default: ''
         type: string
+      androidartifact:
+        description: 'Android SDK Artifact ID'
+        required: false
+        default: ''
+        type: string
   
 jobs:
   build:
@@ -51,6 +56,14 @@ jobs:
           path: ${{ github.workspace }}/.docs
           merge-multiple: true
 
+      - name: Download Android SDK
+        if: inputs.androidartifact != ''
+        uses: actions/download-artifact@v5
+        with:
+          artifact-ids: ${{ inputs.androidartifact }}
+          path: ${{ github.workspace }}/.android
+          merge-multiple: true
+
       - name: Prepare build environment
         uses: ./.github/ci/linux/prepare-build-environment
         with:
@@ -71,7 +84,7 @@ jobs:
       - name: Configure CMake Project
         shell: bash
         run: |
-          export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS:-} -DBUILD_sdk=ON -DBUILD_documentation=OFF -DCCL_PREBUILT_DOCUMENTATION=${GITHUB_WORKSPACE}/.docs"
+          export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS:-} -DBUILD_sdk=ON -DBUILD_documentation=OFF -DCCL_PREBUILT_DOCUMENTATION=${GITHUB_WORKSPACE}/.docs -DCCL_ANDROID_SDK_DIR=${GITHUB_WORKSPACE}/.android"
           source .github/ci/${{ matrix.targetos }}/configure_cmake_project.sh
         env:
           BUILD_DIR: "build/sdk"

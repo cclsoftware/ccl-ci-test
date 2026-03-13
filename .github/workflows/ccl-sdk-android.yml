@@ -2,16 +2,158 @@ name: CCL SDK for Android
 
 concurrency:
   group: ccl-sdk-android
-  
-on: workflow_call
-  
+
+on:
+  workflow_call:
+    outputs:
+      artifact-id:
+        description: "Uploaded artifact ID"
+        value: ${{ jobs.build.outputs.artifact-id }}
+
 jobs:
   build:
-    runs-on: [ubuntu-latest]
     timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - host: ubuntu-latest
+            image: ccl-android-base:24.04
+            targetos: android
+
+    runs-on: ${{matrix.host}}
+
+    permissions:
+      contents: read
+      packages: read
+      actions: read
+      
+    outputs:
+      artifact-id: ${{ steps.artifact-upload-step.outputs.artifact-id }}
+
+    container:
+      image: ghcr.io/cclsoftware/${{matrix.image}}
+      credentials:
+        username: ${{github.actor}}
+        password: ${{secrets.GITHUB_TOKEN}}
+
     steps:
-      - name: TODO
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Prepare build environment
+        uses: ./.github/ci/linux/prepare-build-environment
+        with:
+          targetos: ${{ matrix.targetos }}
+    
+      - name: Prepare SDK build environment
         shell: bash
         run: |
-          echo "TODO"
-          
+          source .github/ci/${{matrix.targetos }}/prepare_sdk_environment.sh
+
+      - name: Configure Arm CMake Project
+        shell: bash
+        run: |
+          export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS:-} -DBUILD_sdk=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DVENDOR_TARGET_ARCHITECTURE=armv7"
+          source .github/ci/linux/configure_cmake_project.sh
+        env:
+          BUILD_DIR: "build/android-arm"
+
+      - name: Configure Arm64 CMake Project
+        shell: bash
+        run: |
+          export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS:-} -DBUILD_sdk=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DVENDOR_TARGET_ARCHITECTURE=arm64"
+          source .github/ci/linux/configure_cmake_project.sh
+        env:
+          BUILD_DIR: "build/android-arm64"
+
+      - name: Configure x86 CMake Project
+        shell: bash
+        run: |
+          export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS:-} -DBUILD_sdk=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DVENDOR_TARGET_ARCHITECTURE=i386"
+          source .github/ci/linux/configure_cmake_project.sh
+        env:
+          BUILD_DIR: "build/android-x86"
+
+      - name: Configure x86-64 CMake Project
+        shell: bash
+        run: |
+          export CMAKE_BUILD_OPTIONS="${CMAKE_BUILD_OPTIONS:-} -DBUILD_sdk=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DVENDOR_TARGET_ARCHITECTURE=x86_64"
+          source .github/ci/linux/configure_cmake_project.sh
+        env:
+          BUILD_DIR: "build/android-x64"
+
+      - name: Build Arm Binaries
+        shell: bash
+        run: |
+          cd development/cmake/build/android-arm
+          source ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/run_gradle_task.sh
+          cpack -G ZIP -C 'Release' --config SdkPackageConfig.cmake -DCPACK_PACKAGE_FILE_NAME=cclsdk-android-arm
+          cd .. &&  rm -fr android-arm
+        env:
+          GRADLE_TASK: assembleArm7Release
+
+      - name: Build Arm64 Binaries
+        shell: bash
+        run: |
+          cd development/cmake/build/android-arm64
+          source ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/run_gradle_task.sh
+          cpack -G ZIP -C 'Release' --config SdkPackageConfig.cmake -DCPACK_PACKAGE_FILE_NAME=cclsdk-android-arm64
+          cd .. && rm -fr android-arm64
+        env:
+          GRADLE_TASK: assembleArm8Release
+
+      - name: Build x86 Binaries
+        shell: bash
+        run: |
+          cd development/cmake/build/android-x86
+          source ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/run_gradle_task.sh
+          cpack -G ZIP -C 'Release' --config SdkPackageConfig.cmake -DCPACK_PACKAGE_FILE_NAME=cclsdk-android-x86
+          cd .. && rm -fr android-x86
+        env:
+          GRADLE_TASK: assembleX86Release
+
+      - name: Build x86-64 Binaries
+        shell: bash
+        run: |
+          cd development/cmake/build/android-x64
+          source ${GITHUB_WORKSPACE}/.github/ci/${{ matrix.targetos }}/run_gradle_task.sh
+          cpack -G ZIP -C 'Release' --config SdkPackageConfig.cmake -DCPACK_PACKAGE_FILE_NAME=cclsdk-android-x64
+          cd .. && rm -fr android-x64
+        env:
+          GRADLE_TASK: assembleX86_64Release
+
+      - name: Package
+        shell: bash
+        run: |
+          cd build/cmake/archive    
+          unzip cclsdk-android-arm.zip
+          unzip cclsdk-android-arm64.zip
+          unzip cclsdk-android-x86.zip
+          unzip cclsdk-android-x64.zip
+
+          mkdir cclsdk-android
+          cp -R cclsdk-android-*/* cclsdk-android
+          rm cclsdk-android/lib/libcorelib.a
+
+          sed -i -e "s|/opt/android-sdk/ndk/[^;]*/toolchains/llvm/prebuilt/linux-x86_64/sysroot|\${CCL_ANDROID_NDK_SYSROOT}|g" cclsdk-android/cmake/android-*/ccl-targets.cmake
+          sed -i -e "s|arm-linux-androideabi|aarch64-linux-android|g" cclsdk-android/cmake/android-arm64/ccl-targets.cmake
+          sed -i -e "s|arm-linux-androideabi|i686-linux-android|g" cclsdk-android/cmake/android-i386/ccl-targets.cmake
+          sed -i -e "s|arm-linux-androideabi|x86_64-linux-android|g" cclsdk-android/cmake/android-x86_64/ccl-targets.cmake
+
+          git apply --ignore-whitespace --directory=cclsdk-android/cmake/android-armv7 ../../../development/packaging/android/ccl-targets.patch
+          git apply --ignore-whitespace --directory=cclsdk-android/cmake/android-arm64 ../../../development/packaging/android/ccl-targets.patch
+          git apply --ignore-whitespace --directory=cclsdk-android/cmake/android-i386 ../../../development/packaging/android/ccl-targets.patch
+          git apply --ignore-whitespace --directory=cclsdk-android/cmake/android-x86_64 ../../../development/packaging/android/ccl-targets.patch
+       
+      - name: Archive artifacts
+        id: artifact-upload-step
+        uses: actions/upload-artifact@v5
+        with:
+          name: ccl-sdk-android
+          path: build/cmake/archive/cclsdk-android
+          retention-days: 1
+          overwrite: true
